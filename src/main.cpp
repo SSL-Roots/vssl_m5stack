@@ -7,6 +7,8 @@
 
 #include <std_msgs/msg/int32.h>
 
+#include "secrets.h"
+
 rcl_publisher_t publisher;
 std_msgs__msg__Int32 msg;
 
@@ -47,7 +49,16 @@ void setup() {
 
 
     Serial.begin(115200);
-    set_microros_serial_transports(Serial);
+
+
+    IPAddress agent_ip(192, 168, 0, 30);
+    size_t agent_port = 8888;
+
+    char ssid[] = SSID;
+    char psk[] = PSK;
+    set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
+
+    // set_microros_serial_transports(Serial);
     delay(2000);
 
     allocator = rcl_get_default_allocator();
