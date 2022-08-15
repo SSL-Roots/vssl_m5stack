@@ -45,18 +45,19 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
 void setup() {
     M5.begin();        // Init M5Core.  初始化 M5Core
     M5.Power.begin();  // Init Power module.  初始化电源模块
-    M5.Lcd.setTextSize(4);
+    M5.Lcd.setTextSize(3);
 
 
     Serial.begin(115200);
 
 
-    IPAddress agent_ip(192, 168, 0, 30);
+    IPAddress agent_ip(192, 168, 1, 8);
     size_t agent_port = 8888;
 
     char ssid[] = SSID;
     char psk[] = PSK;
     set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
+    M5.Lcd.println("wifi connected.");
 
     // set_microros_serial_transports(Serial);
     delay(2000);
