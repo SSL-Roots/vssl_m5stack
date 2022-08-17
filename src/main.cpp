@@ -10,7 +10,9 @@
 #include "secrets.h"
 
 rcl_publisher_t publisher;
+rcl_subscription_t subscriber;
 std_msgs__msg__Int32 msg;
+std_msgs__msg__Int32 sub_msg;
 
 rclc_executor_t executor;
 rclc_support_t support;
@@ -18,7 +20,7 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
-#define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){error_loop();}}
+#define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){M5.Lcd.printf("err:%d\n", temp_rc); error_loop();}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
 // Error handle loop
@@ -26,6 +28,15 @@ void error_loop() {
   while(1) {
     delay(100);
   }
+}
+
+void sub_callback(const void* msgin)
+{
+  const std_msgs__msg__Int32* msg = (const std_msgs__msg__Int32*) msgin;
+
+  M5.Lcd.println("callback called");
+  M5.Lcd.println(msg->data);
+
 }
 
 void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
@@ -45,7 +56,7 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
 void setup() {
     M5.begin();        // Init M5Core.  初始化 M5Core
     M5.Power.begin();  // Init Power module.  初始化电源模块
-    M5.Lcd.setTextSize(3);
+    M5.Lcd.setTextSize(2);
 
 
     Serial.begin(115200);
@@ -56,19 +67,21 @@ void setup() {
 
     char ssid[] = SSID;
     char psk[] = PSK;
-    set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
-    M5.Lcd.println("wifi connected.");
+    // set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
+    // M5.Lcd.println("wifi connected.");
 
-    // set_microros_serial_transports(Serial);
+    set_microros_serial_transports(Serial);
     delay(2000);
 
     allocator = rcl_get_default_allocator();
 
     // create init_options
     RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+    M5.Lcd.println("Init: support");
 
     // create node
     RCCHECK(rclc_node_init_default(&node, "micro_ros_platformio_node", "", &support));
+    M5.Lcd.println("Init: node");
 
     // create publisher
     RCCHECK(rclc_publisher_init_default(
@@ -76,6 +89,21 @@ void setup() {
       &node,
       ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
       "micro_ros_platformio_node_publisher"));
+    M5.Lcd.println("Init: publisher");
+
+    // create subscriber
+    const rosidl_message_type_support_t * my_type_support =
+      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32);
+    subscriber = rcl_get_zero_initialized_subscription();
+    const char* topic_name = "/topic_0";
+    RCCHECK(rclc_subscription_init_default(
+      &subscriber,
+      &node,
+      my_type_support,
+      topic_name
+    ));
+    std_msgs__msg__Int32__init(&sub_msg);
+    M5.Lcd.println("Init: subscriber");
 
     // create timer
     const unsigned int timer_timeout = 1000;
@@ -84,15 +112,28 @@ void setup() {
       &support,
       RCL_MS_TO_NS(timer_timeout),
       timer_callback));
+    M5.Lcd.println("Init: timer");
 
     // create executor
-    RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
+    RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
     RCCHECK(rclc_executor_add_timer(&executor, &timer));
+    RCCHECK(rclc_executor_add_subscription(
+      &executor,
+      &subscriber,
+      &sub_msg,
+      &sub_callback,
+      ON_NEW_DATA
+    ));
+    M5.Lcd.println("Init: executor");
 
     msg.data = 0;
+
+    rclc_executor_prepare(&executor);
+
 }
 
 void loop() {
   delay(100);
   RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
+  M5.Lcd.print(".");
 }
