@@ -131,7 +131,5 @@ Wire.begin(21,22);
 }
 
 void loop() {
-delay(100);
-RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
-M5.Lcd.print(".");
+RCSOFTCHECK(rclc_executor_spin(&executor));
 }
