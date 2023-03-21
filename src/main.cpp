@@ -44,6 +44,9 @@ void sub_callback(const void* msgin)
 {
   const geometry_msgs__msg__Twist* msg = (const geometry_msgs__msg__Twist*) msgin;
 
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setCursor(0, 0);
+
   M5.Lcd.println("callback called");
   M5.Lcd.printf("Linear: x = %.2f, y = %.2f, z = %.2f\n", msg->linear.x, msg->linear.y, msg->linear.z);
   M5.Lcd.printf("Angular: x = %.2f, y = %.2f, z = %.2f\n", msg->angular.x, msg->angular.y, msg->angular.z);
@@ -63,18 +66,6 @@ void sub_callback(const void* msgin)
   }
 }
 
-void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
-  RCLC_UNUSED(last_call_time);
-  if (timer != NULL) {
-    RCSOFTCHECK(rcl_publish(&publisher, &msg, NULL));
-    M5.Lcd.fillScreen(BLACK);
-    M5.Lcd.setCursor(0, 0);
-    M5.Lcd.printf("publish %d\n", msg.data);  // Print text on the screen (string)
-                                  // 在屏幕上打印文本(字符串)
-
-    msg.data++;
-  }
-}
 
 void setup() {
     M5.begin();        // Init M5Core.  初始化 M5Core
@@ -106,14 +97,6 @@ M5.Lcd.println("Init: support");
 RCCHECK(rclc_node_init_default(&node, "micro_ros_platformio_node", "", &support));
 M5.Lcd.println("Init: node");
 
-// create publisher
-RCCHECK(rclc_publisher_init_default(
-  &publisher,
-  &node,
-  ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist),
-  "micro_ros_platformio_node_publisher"));
-M5.Lcd.println("Init: publisher");
-
 // create subscriber
 const rosidl_message_type_support_t * my_type_support =
   ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist);
@@ -128,18 +111,8 @@ RCCHECK(rclc_subscription_init_default(
 geometry_msgs__msg__Twist__init(&sub_msg);
 M5.Lcd.println("Init: subscriber");
 
-// create timer
-const unsigned int timer_timeout = 1000;
-RCCHECK(rclc_timer_init_default(
-  &timer,
-  &support,
-  RCL_MS_TO_NS(timer_timeout),
-  timer_callback));
-M5.Lcd.println("Init: timer");
-
 // create executor
 RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
-RCCHECK(rclc_executor_add_timer(&executor, &timer));
 RCCHECK(rclc_executor_add_subscription(
   &executor,
   &subscriber,
