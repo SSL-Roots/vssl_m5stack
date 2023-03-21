@@ -21,6 +21,14 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_timer_t timer;
 
+//I2C
+TwoWire *i2cWire;
+uint8_t send_data[7],read_data[4],succes_byte,state;
+bool is_robot_i2c=false, is_gyro_i2c=false;
+
+RobotInformations robot_command;
+static float vx,vy,omega,dribble;
+
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){M5.Lcd.printf("err:%d\n", temp_rc); error_loop();}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
@@ -38,6 +46,19 @@ void sub_callback(const void* msgin)
   M5.Lcd.println("callback called");
   M5.Lcd.println(msg->data);
 
+  robot_command.setRobotVelocity(0.0, 0.0, (float)(msg->data) / 100.0);
+
+//I2Cの送信
+  robot_command.makeCommunicateData();
+  robot_command.getCommunicateData(send_data);
+  Wire.beginTransmission(0x54);
+  succes_byte = Wire.write(send_data, 7);
+  state = Wire.endTransmission();
+  if(state == 0){
+    is_robot_i2c  = true;
+  }else{
+    is_robot_i2c  = false;
+  }
 }
 
 void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
@@ -52,14 +73,6 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
     msg.data++;
   }
 }
-
-//I2C
-TwoWire *i2cWire;
-uint8_t send_data[7],read_data[4],succes_byte,state;
-bool is_robot_i2c=false, is_gyro_i2c=false;
-
-RobotInformations robot_command;
-static float vx,vy,omega,dribble;
 
 void setup() {
     M5.begin();        // Init M5Core.  初始化 M5Core
@@ -144,20 +157,6 @@ void setup() {
 }
 
 void loop() {  
-//     robot_command.setRobotVelocity(0.0, 0.0, 0.2);
-
-// //I2Cの送信
-//   robot_command.makeCommunicateData();
-//   robot_command.getCommunicateData(send_data);
-//   Wire.beginTransmission(0x54);
-//   succes_byte = Wire.write(send_data, 7);
-//   state = Wire.endTransmission();
-//   if(state == 0){
-//     is_robot_i2c  = true;
-//   }else{
-//     is_robot_i2c  = false;
-//   }
-
   delay(100);
   RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
   M5.Lcd.print(".");
