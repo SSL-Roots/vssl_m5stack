@@ -30,6 +30,8 @@ bool is_robot_i2c=false, is_gyro_i2c=false;
 RobotInformations robot_command;
 static float vx,vy,omega,dribble;
 
+geometry_msgs__msg__Twist twist_msg;
+
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){M5.Lcd.printf("err:%d\n", temp_rc); error_loop();}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
@@ -43,13 +45,7 @@ void error_loop() {
 void sub_callback(const void* msgin)
 {
   const geometry_msgs__msg__Twist* msg = (const geometry_msgs__msg__Twist*) msgin;
-
-  M5.Lcd.fillScreen(BLACK);
-  M5.Lcd.setCursor(0, 0);
-
-  M5.Lcd.println("callback called");
-  M5.Lcd.printf("Linear: x = %.2f, y = %.2f, z = %.2f\n", msg->linear.x, msg->linear.y, msg->linear.z);
-  M5.Lcd.printf("Angular: x = %.2f, y = %.2f, z = %.2f\n", msg->angular.x, msg->angular.y, msg->angular.z);
+  twist_msg = *msg;
 
   robot_command.setRobotVelocity(msg->linear.x, msg->linear.y, msg->angular.z);
 
@@ -66,6 +62,18 @@ void sub_callback(const void* msgin)
   }
 }
 
+void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
+  RCLC_UNUSED(last_call_time);
+  if (timer != NULL)
+  {
+    RCSOFTCHECK(rcl_publish(&publisher, &msg, NULL));
+
+    M5.Lcd.fillScreen(BLACK);
+    M5.Lcd.setCursor(0, 0);
+
+    M5.Lcd.printf("x = %.2f, y = %.2f, z = %.2f\n", twist_msg.linear.x, twist_msg.linear.y, twist_msg.angular.z);
+  }
+}
 
 void setup() {
     M5.begin();        // Init M5Core.  初始化 M5Core
@@ -112,8 +120,18 @@ RCCHECK(rclc_subscription_init_default(
 geometry_msgs__msg__Twist__init(&sub_msg);
 M5.Lcd.println("Init: subscriber");
 
+// create timer
+const unsigned int timer_timeout = 200;
+RCCHECK(rclc_timer_init_default(
+  &timer,
+  &support,
+  RCL_MS_TO_NS(timer_timeout),
+  timer_callback));
+M5.Lcd.println("Init: timer");
+
 // create executor
 RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
+RCCHECK(rclc_executor_add_timer(&executor, &timer));
 RCCHECK(rclc_executor_add_subscription(
   &executor,
   &subscriber,
