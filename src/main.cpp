@@ -67,76 +67,76 @@ void setup() {
     M5.Lcd.setTextSize(2);
 
 
-    // Serial.begin(115200);
+    Serial.begin(115200);
 
 
-    // IPAddress agent_ip(192, 168, 1, 8);
-    // size_t agent_port = 8888;
+    IPAddress agent_ip(192, 168, 1, 8);
+    size_t agent_port = 8888;
 
-    // char ssid[] = SSID;
-    // char psk[] = PSK;
-    // // set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
-    // // M5.Lcd.println("wifi connected.");
+    char ssid[] = SSID;
+    char psk[] = PSK;
+    // set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
+    // M5.Lcd.println("wifi connected.");
 
-    // set_microros_serial_transports(Serial);
-    // delay(2000);
+    set_microros_serial_transports(Serial);
+    delay(2000);
 
-    // allocator = rcl_get_default_allocator();
+    allocator = rcl_get_default_allocator();
 
-    // // create init_options
-    // RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
-    // M5.Lcd.println("Init: support");
+    // create init_options
+    RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+    M5.Lcd.println("Init: support");
 
-    // // create node
-    // RCCHECK(rclc_node_init_default(&node, "micro_ros_platformio_node", "", &support));
-    // M5.Lcd.println("Init: node");
+    // create node
+    RCCHECK(rclc_node_init_default(&node, "micro_ros_platformio_node", "", &support));
+    M5.Lcd.println("Init: node");
 
-    // // create publisher
-    // RCCHECK(rclc_publisher_init_default(
-    //   &publisher,
-    //   &node,
-    //   ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-    //   "micro_ros_platformio_node_publisher"));
-    // M5.Lcd.println("Init: publisher");
+    // create publisher
+    RCCHECK(rclc_publisher_init_default(
+      &publisher,
+      &node,
+      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+      "micro_ros_platformio_node_publisher"));
+    M5.Lcd.println("Init: publisher");
 
-    // // create subscriber
-    // const rosidl_message_type_support_t * my_type_support =
-    //   ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32);
-    // subscriber = rcl_get_zero_initialized_subscription();
-    // const char* topic_name = "/topic_0";
-    // RCCHECK(rclc_subscription_init_default(
-    //   &subscriber,
-    //   &node,
-    //   my_type_support,
-    //   topic_name
-    // ));
-    // std_msgs__msg__Int32__init(&sub_msg);
-    // M5.Lcd.println("Init: subscriber");
+    // create subscriber
+    const rosidl_message_type_support_t * my_type_support =
+      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32);
+    subscriber = rcl_get_zero_initialized_subscription();
+    const char* topic_name = "/topic_0";
+    RCCHECK(rclc_subscription_init_default(
+      &subscriber,
+      &node,
+      my_type_support,
+      topic_name
+    ));
+    std_msgs__msg__Int32__init(&sub_msg);
+    M5.Lcd.println("Init: subscriber");
 
-    // // create timer
-    // const unsigned int timer_timeout = 1000;
-    // RCCHECK(rclc_timer_init_default(
-    //   &timer,
-    //   &support,
-    //   RCL_MS_TO_NS(timer_timeout),
-    //   timer_callback));
-    // M5.Lcd.println("Init: timer");
+    // create timer
+    const unsigned int timer_timeout = 1000;
+    RCCHECK(rclc_timer_init_default(
+      &timer,
+      &support,
+      RCL_MS_TO_NS(timer_timeout),
+      timer_callback));
+    M5.Lcd.println("Init: timer");
 
-    // // create executor
-    // RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
-    // RCCHECK(rclc_executor_add_timer(&executor, &timer));
-    // RCCHECK(rclc_executor_add_subscription(
-    //   &executor,
-    //   &subscriber,
-    //   &sub_msg,
-    //   &sub_callback,
-    //   ON_NEW_DATA
-    // ));
-    // M5.Lcd.println("Init: executor");
+    // create executor
+    RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
+    RCCHECK(rclc_executor_add_timer(&executor, &timer));
+    RCCHECK(rclc_executor_add_subscription(
+      &executor,
+      &subscriber,
+      &sub_msg,
+      &sub_callback,
+      ON_NEW_DATA
+    ));
+    M5.Lcd.println("Init: executor");
 
-    // msg.data = 0;
+    msg.data = 0;
 
-    // rclc_executor_prepare(&executor);
+    rclc_executor_prepare(&executor);
 
     //I2C
     Wire.begin(21,22);
@@ -144,21 +144,21 @@ void setup() {
 }
 
 void loop() {  
-    robot_command.setRobotVelocity(0.0, 0.0, 0.2);
+//     robot_command.setRobotVelocity(0.0, 0.0, 0.2);
 
-//I2Cの送信
-  robot_command.makeCommunicateData();
-  robot_command.getCommunicateData(send_data);
-  Wire.beginTransmission(0x54);
-  succes_byte = Wire.write(send_data, 7);
-  state = Wire.endTransmission();
-  if(state == 0){
-    is_robot_i2c  = true;
-  }else{
-    is_robot_i2c  = false;
-  }
+// //I2Cの送信
+//   robot_command.makeCommunicateData();
+//   robot_command.getCommunicateData(send_data);
+//   Wire.beginTransmission(0x54);
+//   succes_byte = Wire.write(send_data, 7);
+//   state = Wire.endTransmission();
+//   if(state == 0){
+//     is_robot_i2c  = true;
+//   }else{
+//     is_robot_i2c  = false;
+//   }
 
-//   delay(100);
-//   RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
-//   M5.Lcd.print(".");
+  delay(100);
+  RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
+  M5.Lcd.print(".");
 }
