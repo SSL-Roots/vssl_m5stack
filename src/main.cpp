@@ -76,15 +76,16 @@ void setup() {
     Serial.begin(115200);
 
 
-    IPAddress agent_ip(192, 168, 1, 8);
+    IPAddress agent_ip(192, 168, 0, 17);
     size_t agent_port = 8888;
 
     char ssid[] = SSID;
     char psk[] = PSK;
-    // set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
-    // M5.Lcd.println("wifi connected.");
+    set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
+    M5.Lcd.println("wifi connected.");
 
-set_microros_serial_transports(Serial);
+    // set_microros_serial_transports(Serial);
+    // M5.Lcd.println("serial connected.");
 delay(2000);
 
 allocator = rcl_get_default_allocator();
