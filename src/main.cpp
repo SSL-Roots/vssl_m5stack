@@ -6,6 +6,7 @@
 #include <rclc/executor.h>
 
 #include <std_msgs/msg/int32.h>
+#include <geometry_msgs/msg/twist.h>
 
 #include "secrets.h"
 #include "robot_information.hpp"
@@ -13,7 +14,7 @@
 rcl_publisher_t publisher;
 rcl_subscription_t subscriber;
 std_msgs__msg__Int32 msg;
-std_msgs__msg__Int32 sub_msg;
+geometry_msgs__msg__Twist sub_msg;
 
 rclc_executor_t executor;
 rclc_support_t support;
@@ -41,12 +42,13 @@ void error_loop() {
 
 void sub_callback(const void* msgin)
 {
-  const std_msgs__msg__Int32* msg = (const std_msgs__msg__Int32*) msgin;
+  const geometry_msgs__msg__Twist* msg = (const geometry_msgs__msg__Twist*) msgin;
 
   M5.Lcd.println("callback called");
-  M5.Lcd.println(msg->data);
+  M5.Lcd.printf("Linear: x = %.2f, y = %.2f, z = %.2f\n", msg->linear.x, msg->linear.y, msg->linear.z);
+  M5.Lcd.printf("Angular: x = %.2f, y = %.2f, z = %.2f\n", msg->angular.x, msg->angular.y, msg->angular.z);
 
-  robot_command.setRobotVelocity(0.0, 0.0, (float)(msg->data) / 100.0);
+  robot_command.setRobotVelocity(msg->linear.x, msg->linear.y, msg->angular.z);
 
 //I2Cの送信
   robot_command.makeCommunicateData();
@@ -91,73 +93,72 @@ void setup() {
     // set_microros_wifi_transports(ssid, psk, agent_ip, agent_port);
     // M5.Lcd.println("wifi connected.");
 
-    set_microros_serial_transports(Serial);
-    delay(2000);
+set_microros_serial_transports(Serial);
+delay(2000);
 
-    allocator = rcl_get_default_allocator();
+allocator = rcl_get_default_allocator();
 
-    // create init_options
-    RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
-    M5.Lcd.println("Init: support");
+// create init_options
+RCCHECK(rclc_support_init(&support, 0, NULL, &allocator));
+M5.Lcd.println("Init: support");
 
-    // create node
-    RCCHECK(rclc_node_init_default(&node, "micro_ros_platformio_node", "", &support));
-    M5.Lcd.println("Init: node");
+// create node
+RCCHECK(rclc_node_init_default(&node, "micro_ros_platformio_node", "", &support));
+M5.Lcd.println("Init: node");
 
-    // create publisher
-    RCCHECK(rclc_publisher_init_default(
-      &publisher,
-      &node,
-      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
-      "micro_ros_platformio_node_publisher"));
-    M5.Lcd.println("Init: publisher");
+// create publisher
+RCCHECK(rclc_publisher_init_default(
+  &publisher,
+  &node,
+  ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist),
+  "micro_ros_platformio_node_publisher"));
+M5.Lcd.println("Init: publisher");
 
-    // create subscriber
-    const rosidl_message_type_support_t * my_type_support =
-      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32);
-    subscriber = rcl_get_zero_initialized_subscription();
-    const char* topic_name = "/topic_0";
-    RCCHECK(rclc_subscription_init_default(
-      &subscriber,
-      &node,
-      my_type_support,
-      topic_name
-    ));
-    std_msgs__msg__Int32__init(&sub_msg);
-    M5.Lcd.println("Init: subscriber");
+// create subscriber
+const rosidl_message_type_support_t * my_type_support =
+  ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist);
+subscriber = rcl_get_zero_initialized_subscription();
+const char* topic_name = "/cmd_vel";
+RCCHECK(rclc_subscription_init_default(
+  &subscriber,
+  &node,
+  my_type_support,
+  topic_name
+));
+geometry_msgs__msg__Twist__init(&sub_msg);
+M5.Lcd.println("Init: subscriber");
 
-    // create timer
-    const unsigned int timer_timeout = 1000;
-    RCCHECK(rclc_timer_init_default(
-      &timer,
-      &support,
-      RCL_MS_TO_NS(timer_timeout),
-      timer_callback));
-    M5.Lcd.println("Init: timer");
+// create timer
+const unsigned int timer_timeout = 1000;
+RCCHECK(rclc_timer_init_default(
+  &timer,
+  &support,
+  RCL_MS_TO_NS(timer_timeout),
+  timer_callback));
+M5.Lcd.println("Init: timer");
 
-    // create executor
-    RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
-    RCCHECK(rclc_executor_add_timer(&executor, &timer));
-    RCCHECK(rclc_executor_add_subscription(
-      &executor,
-      &subscriber,
-      &sub_msg,
-      &sub_callback,
-      ON_NEW_DATA
-    ));
-    M5.Lcd.println("Init: executor");
+// create executor
+RCCHECK(rclc_executor_init(&executor, &support.context, 2, &allocator));
+RCCHECK(rclc_executor_add_timer(&executor, &timer));
+RCCHECK(rclc_executor_add_subscription(
+  &executor,
+  &subscriber,
+  &sub_msg,
+  &sub_callback,
+  ON_NEW_DATA
+));
+M5.Lcd.println("Init: executor");
 
-    msg.data = 0;
+msg.data = 0;
 
-    rclc_executor_prepare(&executor);
+rclc_executor_prepare(&executor);
 
-    //I2C
-    Wire.begin(21,22);
-
+//I2C
+Wire.begin(21,22);
 }
 
-void loop() {  
-  delay(100);
-  RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
-  M5.Lcd.print(".");
+void loop() {
+delay(100);
+RCSOFTCHECK(rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100)));
+M5.Lcd.print(".");
 }
