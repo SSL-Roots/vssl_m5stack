@@ -61,7 +61,7 @@ void error_loop()
 void sub_callback(const void *msgin)
 {
   const geometry_msgs__msg__Twist *msg = (const geometry_msgs__msg__Twist *)msgin;
-  // twist_msg = *msg;
+  twist_msg = *msg;
 }
 
 void sendI2C(void)
@@ -175,10 +175,6 @@ void setup()
   msg.data = 0;
 
   rclc_executor_prepare(&executor);
-
-  twist_msg.linear.x = 0.0;
-  twist_msg.linear.y = 0.0;
-  twist_msg.angular.z = 0.1;
 }
 
 void loop()
