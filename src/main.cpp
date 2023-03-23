@@ -58,12 +58,6 @@ void error_loop()
   }
 }
 
-void sub_callback(const void *msgin)
-{
-  const geometry_msgs__msg__Twist *msg = (const geometry_msgs__msg__Twist *)msgin;
-  twist_msg = *msg;
-}
-
 void sendI2C(void)
 {
   robot_command.setRobotVelocity(twist_msg.linear.x, twist_msg.linear.y, twist_msg.angular.z);
@@ -83,20 +77,15 @@ void sendI2C(void)
     is_robot_i2c = false;
   }
 
-  M5.Lcd.fillScreen(BLACK);
-  M5.Lcd.setCursor(0, 0);
+}
 
-  M5.Lcd.printf("x = %.2f\ny = %.2f\nz = %.2f\n", twist_msg.linear.x, twist_msg.linear.y, twist_msg.angular.z);
 
-  // I2Cの通信状態をLCDに表示
-  if (is_robot_i2c)
-  {
-    M5.Lcd.printf("Robot I2C: OK");
-  }
-  else
-  {
-    M5.Lcd.printf("Robot I2C: NG");
-  }
+void sub_callback(const void *msgin)
+{
+  const geometry_msgs__msg__Twist *msg = (const geometry_msgs__msg__Twist *)msgin;
+  twist_msg = *msg;
+
+  sendI2C();
 }
 
 void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
@@ -104,7 +93,20 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
   RCLC_UNUSED(last_call_time);
   if (timer != NULL)
   {
-    sendI2C();
+    M5.Lcd.fillScreen(BLACK);
+    M5.Lcd.setCursor(0, 0);
+
+    M5.Lcd.printf("x = %.2f\ny = %.2f\nz = %.2f\n", twist_msg.linear.x, twist_msg.linear.y, twist_msg.angular.z);
+
+    // I2Cの通信状態をLCDに表示
+    if (is_robot_i2c)
+    {
+      M5.Lcd.printf("Robot I2C: OK");
+    }
+    else
+    {
+      M5.Lcd.printf("Robot I2C: NG");
+    }
   }
 }
 
