@@ -5,7 +5,6 @@
 #include <rclc/rclc.h>
 #include <rclc/executor.h>
 
-#include <std_msgs/msg/int32.h>
 #include <geometry_msgs/msg/twist.h>
 
 #include "secrets.h"
@@ -13,7 +12,6 @@
 
 rcl_publisher_t publisher;
 rcl_subscription_t subscriber;
-std_msgs__msg__Int32 msg;
 geometry_msgs__msg__Twist sub_msg;
 
 rclc_executor_t executor;
@@ -173,8 +171,6 @@ void setup()
       &sub_callback,
       ON_NEW_DATA));
   M5.Lcd.println("Init: executor");
-
-  msg.data = 0;
 
   rclc_executor_prepare(&executor);
 }
