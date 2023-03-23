@@ -111,7 +111,6 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
 void setup()
 {
   M5.begin();       // Init M5Core.  初始化 M5Core
-  M5.Power.begin(); // Init Power module.  初始化电源模块
   M5.Lcd.setTextSize(2);
 
   // I2C
