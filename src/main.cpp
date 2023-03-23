@@ -58,9 +58,9 @@ void error_loop()
   }
 }
 
-void sendI2C(void)
+void sendI2C(float vx, float vy, float omega)
 {
-  robot_command.setRobotVelocity(twist_msg.linear.x, twist_msg.linear.y, twist_msg.angular.z);
+  robot_command.setRobotVelocity(vx, vy, omega);
 
   // I2Cの送信
   robot_command.makeCommunicateData();
@@ -85,7 +85,7 @@ void sub_callback(const void *msgin)
   const geometry_msgs__msg__Twist *msg = (const geometry_msgs__msg__Twist *)msgin;
   twist_msg = *msg;
 
-  sendI2C();
+  sendI2C(twist_msg.linear.x, twist_msg.linear.y, twist_msg.angular.z);
 }
 
 void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
