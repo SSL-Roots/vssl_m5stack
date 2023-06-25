@@ -1,0 +1,63 @@
+
+:imagesdir: ../images
+
+== ハードウェアに関する仕様
+
+=== VSSLロボットの構造
+
+NOTE: 次のバージョンでメインコンピュータがM5Stamp S3に変更される予定です
+
+[cols="1,1,1"]
+|===
+| 項目 | 内容 | 参考情報
+
+| メインコンピュータ
+| M5Stack Basic v2.7
+| https://www.switch-science.com/collections/m5stack/products/9010
+
+| メインボード
+| Roots VSSL Ver0.5
+|
+
+| 車輪数
+| 3 
+| 
+
+| キッカー 
+| 搭載予定 
+|
+
+
+|===
+
+=== メインコンピュータ周辺回路図
+
+image::vssl_m5stack_circuit.png[]
+
+=== メインコンピュータ ピンアサイン
+
+[cols="1,3,3"]
+|===
+| ピン番号 | M5Stack 機能 | ロボット機能
+
+| G21
+| I2C SDA
+| モータドライバ通信
+
+| G26
+| GPIO
+| 赤色LED
+
+| G22
+| I2C SCL
+| モータドライバ通信
+
+| G13
+| ADC2 CH4
+| ボールセンサ
+
+| G34
+| ADC1 CH6
+| バッテリー電圧監視
+
+|===

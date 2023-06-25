@@ -1,0 +1,34 @@
+
+== 開発方法に関する要求仕様
+
+:id: DEVENV001 
+:requirement: フレームワークはArduinoにしたい
+:reason: Arduinoはマルチプラットフォームに対応しているので環境構築が簡単であるため
+:explanation: 
+include::snippets/requirement.adoc[]
+
+:id: DEVENV001-
+:specification: Arduino IDEやPlatformIOで開発できること
+include::snippets/specification.adoc[]
+
+:id: DEVENV001-
+:specification: M5Stack Arduino Libraryを使用しようすること
+include::snippets/specification.adoc[]
+
+:id: DEVENV001-
+:specification: 
+include::snippets/specification.adoc[]
+
+:id: QMAIN001
+:requirement: GitHub Workflowを使って自動ビルド、テストすること
+:reason: ソフトの品質を保つため
+:explanation: 
+include::snippets/requirement.adoc[]
+
+:id: QMAIN001-
+:specification: arduuino-cliを使ってビルドする
+include::snippets/specification.adoc[]
+
+:id: QMAIN001-
+:specification: clang-formatを使ってコードフォーマットをチェックする
+include::snippets/specification.adoc[]
