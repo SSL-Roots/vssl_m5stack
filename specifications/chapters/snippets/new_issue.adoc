@@ -1,0 +1,8 @@
+// Issueを作成するためのattributeを作成
+// 新規ウィンドウで開くためread-laterをつける
+
+:new_issue:
+
+ifdef::github-repo[]
+:new_issue: {github-repo}/issues/new?title={id}%20[icon:github[], window=read-later]
+endif::[]

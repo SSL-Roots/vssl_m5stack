@@ -5,11 +5,8 @@ v1.0
 :toc: left
 :toclevels: 4
 :icons: font
-:data-uri:
 
-// 各adocファイルをプレビューしたときに画像を見たいので、ここではimagesdirを設定しない
-// これにより、asciidoctor実行時に -a imagesdir=images が必要になる
-// :imagesdir: images/
+:imagesdir: images/
 
 // Issueの投稿先となるGitHubリポジトリ
 :github-repo: https://github.com/SSL-Roots/vssl_m5stack

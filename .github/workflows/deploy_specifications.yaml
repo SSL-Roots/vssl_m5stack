@@ -20,10 +20,16 @@ jobs:
       - name: Install asciidoctor
         run: | 
           sudo apt install -y asciidoctor
+
+      - name: Append open issues to AsciiDoc files
+        run: |
+          cd specifications
+          ls chapters/*.adoc | xargs -i .scripts/append_oppen_issues.py {} ${{ github.repository }}
+
       - name: Generate publications
         run: |
           cd specifications
-          asciidoctor -a imagesdir=images requirements_specification.adoc -D publications -o index.html
+          asciidoctor requirements_specifications.adoc -D publications -o index.html
           cp -r images publications
 
       - name: Push gh-pages branch

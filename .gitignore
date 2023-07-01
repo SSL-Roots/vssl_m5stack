@@ -4,4 +4,6 @@
 .vscode/launch.json
 .vscode/ipch
 include/secrets.h
+
 *.html
+__pycache__/
