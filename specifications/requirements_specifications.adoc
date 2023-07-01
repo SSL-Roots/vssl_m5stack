@@ -1,7 +1,7 @@
 
 = Roots VSSLロボットのソフトウェア要求仕様書
 // ここには要求仕様書のバージョンや目次設定などのメタ情報を記載します
-v1.0
+v1.0 
 :toc: left
 :toclevels: 4
 :icons: font
@@ -10,6 +10,10 @@ v1.0
 
 // Issueの投稿先となるGitHubリポジトリ
 :github-repo: https://github.com/SSL-Roots/vssl_m5stack
+
+NOTE: このドキュメントの原本はこちら {github-repo}
+
+include::chapters/about_this_document.adoc[]
 
 include::chapters/hardware.adoc[]
 
