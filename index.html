@@ -448,17 +448,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_ハードウェアに関する仕様">ハードウェアに関する仕様</a>
+<li><a href="#_このドキュメントについて">このドキュメントについて</a></li>
+<li><a href="#_ハードウェア仕様">ハードウェア仕様</a>
 <ul class="sectlevel2">
 <li><a href="#_vsslロボットの構造">VSSLロボットの構造</a></li>
 <li><a href="#_メインコンピュータ周辺回路図">メインコンピュータ周辺回路図</a></li>
 <li><a href="#_メインコンピュータ_ピンアサイン">メインコンピュータ ピンアサイン</a></li>
 </ul>
 </li>
-<li><a href="#_開発方法に関する要求仕様">開発方法に関する要求仕様</a>
+<li><a href="#_開発方法">開発方法</a>
 <ul class="sectlevel2">
 <li><a href="#_devenv001フレームワークはarduinoにしたい">[DEVENV001]フレームワークはArduinoにしたい <span class="icon"><i class="fa fa-github"></i></span></a></li>
-<li><a href="#_qmain001github_workflowを使って自動ビルドテストすること">[QMAIN001]GitHub Workflowを使って自動ビルド、テストすること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_devenv011_github_workflowを使って自動ビルドテストすること">[DEVENV011-]GitHub Workflowを使って自動ビルド、テストすること <span class="icon"><i class="fa fa-github"></i></span></a></li>
 </ul>
 </li>
 <li><a href="#_カテゴリ一覧">カテゴリ一覧</a></li>
@@ -466,9 +467,74 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_ハードウェアに関する仕様">ハードウェアに関する仕様</h2>
+<div id="preamble">
 <div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+このドキュメントの原本はこちら <a href="https://github.com/SSL-Roots/vssl_m5stack" class="bare">https://github.com/SSL-Roots/vssl_m5stack</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_このドキュメントについて">このドキュメントについて</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>このドキュメントは、RootsのVSSL用ロボットのソフトウェアである<strong>SSL-Roots/vssl_m5stack</strong>の要求仕様を記載しています</p>
+</li>
+<li>
+<p>VSSL用ロボットのハードウェア要求仕様は別のドキュメントに記載されています</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+23年7月時点でハードウェア要求仕様書は公開されておりません
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ハードウェア仕様">ハードウェア仕様</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>ここではハードウェアに関する仕様を記載します</p>
+</li>
+<li>
+<p>ハードウェアの仕様は別のドキュメントで定められており、ここではその内容をコピーして記載しています</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+23年7月時点でハードウェア要求仕様書は公開されておりません
+</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="_vsslロボットの構造">VSSLロボットの構造</h3>
 <div class="admonitionblock note">
@@ -575,8 +641,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_開発方法に関する要求仕様">開発方法に関する要求仕様</h2>
+<h2 id="_開発方法">開発方法</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>ここでは本ソフトウェアの開発方法に関する要求仕様を記載します</p>
+</li>
+<li>
+<p>要求仕様IDはDEVENV***とします</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p><a id="DEVENV001"></a></p>
 </div>
@@ -618,19 +694,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a id="DEVENV001-"></a> [DEVENV001-]  <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
-<p><a id="QMAIN001"></a></p>
+<p><a id="DEVENV011-"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_qmain001github_workflowを使って自動ビルドテストすること">[QMAIN001]GitHub Workflowを使って自動ビルド、テストすること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=QMAIN001%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<h3 id="_devenv011_github_workflowを使って自動ビルドテストすること">[DEVENV011-]GitHub Workflowを使って自動ビルド、テストすること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -656,14 +725,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><a id="QMAIN001-"></a> [QMAIN001-] arduuino-cliを使ってビルドする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=QMAIN001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+<p><a id="DEVENV011-"></a> [DEVENV011-] arduino-cliを使ってビルドする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
 </li>
 </ul>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a id="QMAIN001-"></a> [QMAIN001-] clang-formatを使ってコードフォーマットをチェックする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=QMAIN001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+<p><a id="DEVENV011-"></a> [DEVENV011-] clang-formatを使ってコードフォーマットをチェックする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
 </li>
 </ul>
 </div>
@@ -775,7 +844,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-07-01 06:36:02 UTC
+Last updated 2023-07-01 08:07:59 UTC
 </div>
 </div>
 </body>
