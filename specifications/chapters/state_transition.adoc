@@ -1,0 +1,47 @@
+== 状態遷移
+
+- ここでは状態遷移に関する要求仕様を記載します
+- 要求仕様IDはSTATE***とします
+
+
+:id: STATE001 
+:requirement: 状態遷移図に従ってロボットの状態を制御すること
+:reason: 状況に応じてロボットの機能を切り替えたいため
+:explanation: 状態遷移図は<<全体状態遷移図>>と個別の状態遷移図にわけて記載する
+include::snippets/requirement.adoc[]
+
+.全体状態遷移図
+[#全体状態遷移図]
+image::全体状態遷移図.drawio.png[]
+
+前回モード開始状態について
+
+:id: STATE001-
+:specification: 電源がONされたら前回モード準備状態に遷移し、前回のモードを実行すること
+include::snippets/specification.adoc[]
+
+:id: STATE001-
+:specification: <<モード実行機能>>で定義されたモード実行失敗状態になったときは、モード切替状態に遷移すること
+include::snippets/specification.adoc[]
+
+モード切替状態について
+
+:id: STATE001-
+:specification: モード切替状態では次に遷移するモードを選択すること
+include::snippets/specification.adoc[]
+
+:id: STATE001-
+:specification: モードの選択と決定方法は<<モード実行機能>>を参照すること
+include::snippets/specification.adoc[]
+
+モードの実行について
+
+:id: STATE001-
+:specification: 各モード実行中は、それぞれのモード機能仕様に従い、モード切替状態に遷移できること
+include::snippets/specification.adoc[]
+
+その他
+
+:id: STATE001-
+:specification: 各状態で電源がOFFになったら、電源OFF状態に遷移すること
+include::snippets/specification.adoc[]
