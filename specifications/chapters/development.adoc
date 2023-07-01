@@ -1,33 +1,32 @@
 == 開発方法
 
 - ここでは本ソフトウェアの開発方法に関する要求仕様を記載します
-- 要求仕様IDはDEVENV***とします
+- 要求仕様IDはDEV***とします
 
-
-:id: DEVENV001 
+:id: DEV001 
 :requirement: フレームワークはArduinoにしたい
 :reason: Arduinoはマルチプラットフォームに対応しているので環境構築が簡単であるため
 :explanation: 
 include::snippets/requirement.adoc[]
 
-:id: DEVENV001-
+:id: DEV001-
 :specification: Arduino IDEやPlatformIOで開発できること
 include::snippets/specification.adoc[]
 
-:id: DEVENV001-
+:id: DEV001-
 :specification: M5Stack Arduino Libraryを使用しようすること
 include::snippets/specification.adoc[]
 
-:id: DEVENV011-
+:id: DEV011
 :requirement: GitHub Workflowを使って自動ビルド、テストすること
 :reason: ソフトの品質を保つため
 :explanation: 
 include::snippets/requirement.adoc[]
 
-:id: DEVENV011-
+:id: DEV011-
 :specification: arduino-cliを使ってビルドする
 include::snippets/specification.adoc[]
 
-:id: DEVENV011-
+:id: DEV011-
 :specification: clang-formatを使ってコードフォーマットをチェックする
 include::snippets/specification.adoc[]
