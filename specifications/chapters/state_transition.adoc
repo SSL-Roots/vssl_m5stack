@@ -14,34 +14,68 @@ include::snippets/requirement.adoc[]
 [#全体状態遷移図]
 image::全体状態遷移図.drawio.png[]
 
-前回モード開始状態について
+:id: STATE011 
+:requirement: 電源がONされたら前回モード準備状態に遷移し、前回のモードを実行すること
+:reason: 電源を入れるたびにモードを選択するのは手間がかかるため
+:explanation: 
+include::snippets/requirement.adoc[]
 
-:id: STATE001-
-:specification: 電源がONされたら前回モード準備状態に遷移し、前回のモードを実行すること
-include::snippets/specification.adoc[]
-
-:id: STATE001-
+:id: STATE011-
 :specification: <<モード実行機能>>で定義されたモード実行失敗状態になったときは、モード切替状態に遷移すること
 include::snippets/specification.adoc[]
 
-モード切替状態について
+:id: STATE021 
+:requirement: モード切替状態では次に遷移するモードを選択すること
+:reason: 複数のモードを実装したいため
+:explanation: 
+include::snippets/requirement.adoc[]
 
-:id: STATE001-
-:specification: モード切替状態では次に遷移するモードを選択すること
-include::snippets/specification.adoc[]
-
-:id: STATE001-
+:id: STATE021-
 :specification: モードの選択と決定方法は<<モード実行機能>>を参照すること
 include::snippets/specification.adoc[]
 
-モードの実行について
+:id: STATE031 
+:requirement: 各モード実行中は、それぞれのモード機能仕様に従い、モード切替状態に遷移できること
+:reason: 電源を入れたら前回のモードを実行するので、各モードからモード切替状態に遷移できることが必須であるため
+:explanation: 
+include::snippets/requirement.adoc[]
 
-:id: STATE001-
-:specification: 各モード実行中は、それぞれのモード機能仕様に従い、モード切替状態に遷移できること
+:id: STATE101 
+:requirement: ロボカップモードでは、ロボカップモード状態遷移図に従ってロボットの状態を制御すること
+:reason: ロボカップモードは、ロボカップの動作に専念したいため
+:explanation: <<ロボカップモード状態遷移図>>を参照すること
+include::snippets/requirement.adoc[]
+
+.ロボカップモード状態遷移図
+[#ロボカップモード状態遷移図]
+image::ロボカップモード状態遷移図.drawio.png[]
+
+:id: STATE111 
+:requirement: ロボカップモードに遷移したら、Wi-Fiの接続を開始すること
+:reason: Wi-Fi通信でコマンドを受け取るため + \
+コマンドを受け取らないとロボカップのロボットとして動けないため
+:explanation: 
+include::snippets/requirement.adoc[]
+
+:id: STATE111-
+:specification: Wi-Fiへの接続方法は<<Wi-Fi通信機能>>を参照すること
 include::snippets/specification.adoc[]
 
-その他
+:id: STATE121 
+:requirement: コマンドを受信するまでは、コマンド受信待機状態として動作すること
+:reason: コマンドの受信成功を失敗を明確にしたいため
+:explanation: 
+include::snippets/requirement.adoc[]
 
-:id: STATE001-
-:specification: 各状態で電源がOFFになったら、電源OFF状態に遷移すること
-include::snippets/specification.adoc[]
+:id: STATE131 
+:requirement: アクティブ状態ではコマンドに従って動作すること
+:reason: コマンド以外の動作を行うとロボットの振る舞いが不明瞭になるため
+:explanation: 
+include::snippets/requirement.adoc[]
+
+:id: STATE141 
+:requirement: モード終了状態では、安全にモード切替状態に遷移するための処理を行いたい
+:reason: モータやキッカーが動作したままモード切替状態に遷移すると、ロボットの破損や怪我の原因になるため
+:explanation: 
+include::snippets/requirement.adoc[]
+
