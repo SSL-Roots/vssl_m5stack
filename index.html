@@ -458,8 +458,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_開発方法">開発方法</a>
 <ul class="sectlevel2">
-<li><a href="#_devenv001フレームワークはarduinoにしたい">[DEVENV001]フレームワークはArduinoにしたい <span class="icon"><i class="fa fa-github"></i></span></a></li>
-<li><a href="#_devenv011_github_workflowを使って自動ビルドテストすること">[DEVENV011-]GitHub Workflowを使って自動ビルド、テストすること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_dev001フレームワークはarduinoにしたい">[DEV001]フレームワークはArduinoにしたい <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_dev011github_workflowを使って自動ビルドテストすること">[DEV011]GitHub Workflowを使って自動ビルド、テストすること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+</ul>
+</li>
+<li><a href="#_状態遷移">状態遷移</a>
+<ul class="sectlevel2">
+<li><a href="#_state001状態遷移図に従ってロボットの状態を制御すること">[STATE001]状態遷移図に従ってロボットの状態を制御すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state011電源がonされたら前回モード準備状態に遷移し前回のモードを実行すること">[STATE011]電源がONされたら前回モード準備状態に遷移し、前回のモードを実行すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state021モード切替状態では次に遷移するモードを選択すること">[STATE021]モード切替状態では次に遷移するモードを選択すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state031各モード実行中はそれぞれのモード機能仕様に従いモード切替状態に遷移できること">[STATE031]各モード実行中は、それぞれのモード機能仕様に従い、モード切替状態に遷移できること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state101ロボカップモードではロボカップモード状態遷移図に従ってロボットの状態を制御すること">[STATE101]ロボカップモードでは、ロボカップモード状態遷移図に従ってロボットの状態を制御すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state111ロボカップモードに遷移したらwi_fiの接続を開始すること">[STATE111]ロボカップモードに遷移したら、Wi-Fiの接続を開始すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state121コマンドを受信するまではコマンド受信待機状態として動作すること">[STATE121]コマンドを受信するまでは、コマンド受信待機状態として動作すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state131アクティブ状態ではコマンドに従って動作すること">[STATE131]アクティブ状態ではコマンドに従って動作すること <span class="icon"><i class="fa fa-github"></i></span></a></li>
+<li><a href="#_state141モード終了状態では安全にモード切替状態に遷移するための処理を行いたい">[STATE141]モード終了状態では、安全にモード切替状態に遷移するための処理を行いたい <span class="icon"><i class="fa fa-github"></i></span></a></li>
 </ul>
 </li>
 <li><a href="#_カテゴリ一覧">カテゴリ一覧</a></li>
@@ -649,15 +662,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>ここでは本ソフトウェアの開発方法に関する要求仕様を記載します</p>
 </li>
 <li>
-<p>要求仕様IDはDEVENV***とします</p>
+<p>要求仕様IDはDEV***とします</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><a id="DEVENV001"></a></p>
+<p><a id="DEV001"></a></p>
 </div>
 <div class="sect2">
-<h3 id="_devenv001フレームワークはarduinoにしたい">[DEVENV001]フレームワークはArduinoにしたい <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV001%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<h3 id="_dev001フレームワークはarduinoにしたい">[DEV001]フレームワークはArduinoにしたい <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEV001%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -683,23 +696,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><a id="DEVENV001-"></a> [DEVENV001-] Arduino IDEやPlatformIOで開発できること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+<p><a id="DEV001-"></a> [DEV001-] Arduino IDEやPlatformIOで開発できること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEV001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
 </li>
 </ul>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a id="DEVENV001-"></a> [DEVENV001-] M5Stack Arduino Libraryを使用しようすること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+<p><a id="DEV001-"></a> [DEV001-] M5Stack Arduino Libraryを使用しようすること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEV001-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><a id="DEVENV011-"></a></p>
+<p><a id="DEV011"></a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_devenv011_github_workflowを使って自動ビルドテストすること">[DEVENV011-]GitHub Workflowを使って自動ビルド、テストすること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<h3 id="_dev011github_workflowを使って自動ビルドテストすること">[DEV011]GitHub Workflowを使って自動ビルド、テストすること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEV011%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -725,17 +738,318 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><a id="DEVENV011-"></a> [DEVENV011-] arduino-cliを使ってビルドする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+<p><a id="DEV011-"></a> [DEV011-] arduino-cliを使ってビルドする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
 </li>
 </ul>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a id="DEVENV011-"></a> [DEVENV011-] clang-formatを使ってコードフォーマットをチェックする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEVENV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+<p><a id="DEV011-"></a> [DEV011-] clang-formatを使ってコードフォーマットをチェックする <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=DEV011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_状態遷移">状態遷移</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>ここでは状態遷移に関する要求仕様を記載します</p>
+</li>
+<li>
+<p>要求仕様IDはSTATE***とします</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="STATE001"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_state001状態遷移図に従ってロボットの状態を制御すること">[STATE001]状態遷移図に従ってロボットの状態を制御すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE001%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">状況に応じてロボットの機能を切り替えたいため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">状態遷移図は<a href="#全体状態遷移図">全体状態遷移図</a>と個別の状態遷移図にわけて記載する</p></td>
+</tr>
+</tbody>
+</table>
+<div id="全体状態遷移図" class="imageblock">
+<div class="content">
+<img src="images/全体状態遷移図.drawio.png" alt="全体状態遷移図.drawio">
+</div>
+<div class="title">Figure 1. 全体状態遷移図</div>
+</div>
+<div class="paragraph">
+<p><a id="STATE011"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state011電源がonされたら前回モード準備状態に遷移し前回のモードを実行すること">[STATE011]電源がONされたら前回モード準備状態に遷移し、前回のモードを実行すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE011%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">電源を入れるたびにモードを選択するのは手間がかかるため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><a id="STATE011-"></a> [STATE011-] <a href="#モード実行機能">[モード実行機能]</a>で定義されたモード実行失敗状態になったときは、モード切替状態に遷移すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE011-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="STATE021"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state021モード切替状態では次に遷移するモードを選択すること">[STATE021]モード切替状態では次に遷移するモードを選択すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE021%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">複数のモードを実装したいため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><a id="STATE021-"></a> [STATE021-] モードの選択と決定方法は<a href="#モード実行機能">[モード実行機能]</a>を参照すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE021-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="STATE031"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state031各モード実行中はそれぞれのモード機能仕様に従いモード切替状態に遷移できること">[STATE031]各モード実行中は、それぞれのモード機能仕様に従い、モード切替状態に遷移できること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE031%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">電源を入れたら前回のモードを実行するので、各モードからモード切替状態に遷移できることが必須であるため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="STATE101"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state101ロボカップモードではロボカップモード状態遷移図に従ってロボットの状態を制御すること">[STATE101]ロボカップモードでは、ロボカップモード状態遷移図に従ってロボットの状態を制御すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE101%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ロボカップモードは、ロボカップの動作に専念したいため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ロボカップモード状態遷移図">ロボカップモード状態遷移図</a>を参照すること</p></td>
+</tr>
+</tbody>
+</table>
+<div id="ロボカップモード状態遷移図" class="imageblock">
+<div class="content">
+<img src="images/ロボカップモード状態遷移図.drawio.png" alt="ロボカップモード状態遷移図.drawio">
+</div>
+<div class="title">Figure 2. ロボカップモード状態遷移図</div>
+</div>
+<div class="paragraph">
+<p><a id="STATE111"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state111ロボカップモードに遷移したらwi_fiの接続を開始すること">[STATE111]ロボカップモードに遷移したら、Wi-Fiの接続を開始すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE111%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wi-Fi通信でコマンドを受け取るため<br>
+コマンドを受け取らないとロボカップのロボットとして動けないため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><a id="STATE111-"></a> [STATE111-] Wi-Fiへの接続方法は<a href="#Wi-Fi通信機能">[Wi-Fi通信機能]</a>を参照すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE111-%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="STATE121"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state121コマンドを受信するまではコマンド受信待機状態として動作すること">[STATE121]コマンドを受信するまでは、コマンド受信待機状態として動作すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE121%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">コマンドの受信成功を失敗を明確にしたいため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="STATE131"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state131アクティブ状態ではコマンドに従って動作すること">[STATE131]アクティブ状態ではコマンドに従って動作すること <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE131%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">コマンド以外の動作を行うとロボットの振る舞いが不明瞭になるため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="STATE141"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_state141モード終了状態では安全にモード切替状態に遷移するための処理を行いたい">[STATE141]モード終了状態では、安全にモード切替状態に遷移するための処理を行いたい <a href="https://github.com/SSL-Roots/vssl_m5stack/issues/new?title=STATE141%20" target="read-later"><span class="icon"><i class="fa fa-github"></i></span></a></h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">要求の補足</th>
+<th class="tableblock halign-left valign-top">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">理由</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">モータやキッカーが動作したままモード切替状態に遷移すると、ロボットの破損や怪我の原因になるため</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">説明</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -844,7 +1158,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-07-01 08:07:59 UTC
+Last updated 2023-09-09 03:12:03 UTC
 </div>
 </div>
 </body>
