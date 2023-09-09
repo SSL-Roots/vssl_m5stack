@@ -26,9 +26,9 @@ jobs:
           enable-deltas-report: true
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          fqbn: M5Stack:esp32:M5Core
+          fqbn: m5Stack:esp32:M5Core
           platforms: |  # M5Stack公式のpackage indexを使用する
-            - name: M5Stack:esp32
+            - name: m5Stack:esp32
               version: 2.0.7
               source-url: https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/arduino/package_m5stack_index.json
           libraries: |  
