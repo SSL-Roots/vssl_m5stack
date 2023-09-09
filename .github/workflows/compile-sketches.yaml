@@ -4,11 +4,11 @@ name: Compile Sketches
 
 on:
   push:
-    paths-ignore:
-    - '**.md'
+    paths:
+      - 'vssl_main/**'
   pull_request:
-    paths-ignore:
-    - '**.md'
+    paths:
+      - 'vssl_main/**'
   workflow_dispatch:
 
 env:
