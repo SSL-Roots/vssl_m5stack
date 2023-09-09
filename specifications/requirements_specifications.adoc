@@ -19,4 +19,6 @@ include::chapters/hardware.adoc[]
 
 include::chapters/development.adoc[]
 
+include::chapters/state_transition.adoc[]
+
 include::chapters/categories.adoc[]
