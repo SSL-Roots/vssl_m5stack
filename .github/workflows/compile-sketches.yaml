@@ -26,7 +26,7 @@ jobs:
           enable-deltas-report: true
           sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          fqbn: m5stack:esp32:M5Core
+          fqbn: m5stack:esp32:m5stack-core-esp32
           platforms: |  # M5Stack公式のpackage indexを使用する
             - name: m5stack:esp32
               version: 2.0.7
