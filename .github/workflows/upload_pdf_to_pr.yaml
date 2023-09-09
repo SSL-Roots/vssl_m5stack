@@ -2,6 +2,9 @@ name: Upload PDF to pull request
 
 on:
   pull_request:
+    branches: [main]
+    paths:
+      - 'specifications/**'
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -39,6 +42,7 @@ jobs:
 
           # Token for current repo (used to post PR comment)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts-branch: artifacts
 
           # Whitespace-separated list of files to upload
           artifacts: |
