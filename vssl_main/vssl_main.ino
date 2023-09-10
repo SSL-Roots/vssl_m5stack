@@ -26,12 +26,15 @@ void setup() {
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
   M5.Log.setEnableColor(m5::log_target_serial, true);
 
-  if(!connect_wifi_via_smart_config()) {
+
+  const IPAddress ip(192,168,11,20);
+  const IPAddress subnet(255,255,255,0);
+  if(!connect_wifi_via_smart_config(ip, ip, subnet)) {
     M5_LOGI("Failed to connect Wi-Fi. Reset.");
     ESP.restart();
   }
 
-  if(!g_receiver.begin(224, 5, 23, 1, 10003)) {
+  if(!g_receiver.begin(10003)) {
     M5_LOGI("Failed to begin udp connection. Reset.");
     ESP.restart();
   }
@@ -49,7 +52,7 @@ void loop() {
     M5_LOGI("vel_forward: %f", command.move_velocity.forward);
     M5_LOGI("vel_left: %f", command.move_velocity.left);
     M5_LOGI("vel_angular: %f", command.move_velocity.angular);
-    M5_LOGI("kick_speed: %d", command.kick_speed);
+    M5_LOGI("kick_speed: %f", command.kick_speed);
   }
 
   if (M5.BtnA.wasHold()) {

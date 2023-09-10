@@ -23,9 +23,7 @@ class CommandReceiver {
  public:
   CommandReceiver();
   ~CommandReceiver();
-  bool begin(
-    const int segment1=225, const int segment2=1,
-    const int segment3=1, const int segment4=1, const int multicast_port=10001);
+  bool begin(const int port=10001);
   bool receive(void);
   RobotControl get_latest_command(void) const { return latest_command_; }
 

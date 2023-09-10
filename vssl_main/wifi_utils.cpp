@@ -13,11 +13,11 @@
 // limitations under the License.
 
 #include <M5Unified.h>
-#include <WiFi.h>
 
 #include "wifi_utils.h"
 
 bool connect_wifi_via_smart_config(
+    const IPAddress local_ip, const IPAddress gateway, const IPAddress subnet,
     const int timeout_prev_connection,
     const int timeout_smart_config,
     const int timeout_new_connection) {
@@ -25,6 +25,7 @@ bool connect_wifi_via_smart_config(
   const int DELAY_MS = 1000;
 
   // Use previous connection info
+  WiFi.config(local_ip, gateway, subnet);
   WiFi.begin();
   while (WiFi.status() != WL_CONNECTED) {
     M5_LOGI("Try to use a previous Wi-Fi connection.");

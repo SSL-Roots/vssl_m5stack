@@ -15,7 +15,10 @@
 #ifndef WIFI_UTILS_H
 #define WIFI_UTILS_H
 
+#include <WiFi.h>
+
 bool connect_wifi_via_smart_config(
+    const IPAddress local_ip, const IPAddress gateway, const IPAddress subnet,
     const int timeout_prev_connection=10000,
     const int timeout_smart_config=30000,
     const int timeout_new_connection=30000);

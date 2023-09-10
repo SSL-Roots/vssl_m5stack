@@ -25,12 +25,9 @@ CommandReceiver::~CommandReceiver() {
   udp_.stop();
 }
 
-bool CommandReceiver::begin(
-    const int segment1, const int segment2,
-    const int segment3, const int segment4, const int multicast_port) {
+bool CommandReceiver::begin(const int port) {
 
-  IPAddress multicast_ip(segment1, segment2, segment3, segment4);
-  return udp_.beginMulticast(multicast_ip, multicast_port);
+  return udp_.begin(port);
 }
 
 bool CommandReceiver::receive(void) {
