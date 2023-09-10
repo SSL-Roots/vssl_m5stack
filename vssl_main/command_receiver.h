@@ -12,12 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef WIFI_UTILS_H
-#define WIFI_UTILS_H
+#ifndef COMMAND_RECEIVER_H
+#define COMMAND_RECEIVER_H
 
-bool connect_wifi_via_smart_config(
-    const int timeout_prev_connection=10000,
-    const int timeout_smart_config=30000,
-    const int timeout_new_connection=30000);
+#include <WiFiUdp.h>
 
-#endif  // WIFI_UTILS_H
+#include "vssl_robot_control.pb.h"
+
+class CommandReceiver {
+ public:
+  CommandReceiver();
+  ~CommandReceiver();
+  bool begin(
+    const int segment1=225, const int segment2=1,
+    const int segment3=1, const int segment4=1, const int multicast_port=10001);
+  bool receive(void);
+  RobotControl get_latest_command(void) const { return latest_command_; }
+
+ private:
+
+  WiFiUDP udp_;
+  RobotControl latest_command_;
+};
+
+#endif  // COMMAND_RECEIVER_H
