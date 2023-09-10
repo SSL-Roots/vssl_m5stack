@@ -3,6 +3,7 @@
 #include "pb_encode.h"
 #include "pb_decode.h"
 #include "vssl_robot_control.pb.h"
+#include "wifi_utils.h"
 
 void setup() {
   M5.begin();
@@ -10,6 +11,11 @@ void setup() {
   // ログをカラー表示する
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_VERBOSE);
   M5.Log.setEnableColor(m5::log_target_serial, true);
+
+  if(!connect_wifi_via_smart_config()) {
+    M5_LOGI("Reset");
+    ESP.restart();
+  }
 
   M5_LOGI("Hello, world!");
 }
