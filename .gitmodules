@@ -1,0 +1,3 @@
+[submodule "vssl_protocol"]
+	path = vssl_protocol
+	url = https://github.com/SSL-Roots/vssl_protocol.git
