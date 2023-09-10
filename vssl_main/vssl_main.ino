@@ -1,5 +1,9 @@
 #include <M5Unified.h>
 
+#include "pb_encode.h"
+#include "pb_decode.h"
+#include "vssl_robot_control.pb.h"
+
 void setup() {
   M5.begin();
 
@@ -16,6 +20,15 @@ void loop() {
 
   if (M5.BtnA.wasHold()) {
     M5_LOGI("Button A was Hold!");
+    RobotControl control = RobotControl_init_zero;
+    control.move_velocity.forward = 0.5;
+    control.move_velocity.left = 0.0;
+    control.move_velocity.angular = 0.0;
+    control.kick_speed = 0.0;
+    control.dribbler_speed = 0.0;
+    uint8_t buffer[256];
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+    pb_encode(&stream, RobotControl_fields, &control);
   }
 
   if (M5.BtnA.wasPressed()) {
