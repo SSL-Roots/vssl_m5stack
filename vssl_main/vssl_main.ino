@@ -13,8 +13,10 @@
 // limitations under the License.
 
 #include <M5Unified.h>
+#include <Wire.h>
 
 #include "command_receiver.h"
+#include "robot_information.hpp"
 #include "wifi_utils.h"
 
 CommandReceiver g_receiver;
@@ -39,6 +41,8 @@ void setup() {
     ESP.restart();
   }
 
+  Wire.begin(M5.Ex_I2C.getSDA(), M5.Ex_I2C.getSCL());
+
   M5_LOGI("Hello, world!");
 }
 
@@ -47,22 +51,38 @@ void loop() {
   M5.update();
 
   if(g_receiver.receive()) {
-    M5_LOGI("Received command!");
-    RobotControl command = g_receiver.get_latest_command();
-    M5_LOGI("vel_forward: %f", command.move_velocity.forward);
-    M5_LOGI("vel_left: %f", command.move_velocity.left);
-    M5_LOGI("vel_angular: %f", command.move_velocity.angular);
-    M5_LOGI("kick_speed: %f", command.kick_speed);
+    M5_LOGD("Received command!");
   }
 
-  if (M5.BtnA.wasHold()) {
-    M5_LOGI("Button A was Hold!");
+  RobotControl command = g_receiver.get_latest_command();
+
+  RobotInformations robot_info;
+  robot_info.setRobotVelocity(command.move_velocity.forward, command.move_velocity.left, command.move_velocity.angular);
+
+  // チャージフラグは常時オンする必要あり
+  robot_info.setChargeFlag(true);
+  if (command.kick_speed > 0.0) {
+    robot_info.setKickFlag(true);
+  } else {
+    robot_info.setKickFlag(false);
   }
 
-  if (M5.BtnA.wasPressed()) {
-    M5_LOGI("Button A was pressed!");
+  const int DATA_SIZE = 7;
+  unsigned char send_data[DATA_SIZE];
+  robot_info.makeCommunicateData();
+  robot_info.getCommunicateData(send_data);
+
+  const unsigned char SLAVE_ADDR = 0x54;
+  Wire.beginTransmission(SLAVE_ADDR);
+  Wire.write(send_data, DATA_SIZE);
+  
+  if(Wire.endTransmission() == 0) {
+    M5_LOGI("Sent command!");
+  } else {
+    M5_LOGI("Failed to send command!");
   }
 
+  // リセット処理
   if (M5.BtnA.isHolding()) {
     M5_LOGI("Button A is holding!"); 
     ESP.restart();
