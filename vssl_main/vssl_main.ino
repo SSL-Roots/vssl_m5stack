@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <M5Unified.h>
 #include <Wire.h>
+#include <M5Unified.h>
 
 #include "command_receiver.h"
 #include "robot_information.hpp"
@@ -22,7 +22,8 @@
 CommandReceiver g_receiver;
 
 void setup() {
-  M5.begin();
+  auto cfg = M5.config();
+  M5.begin(cfg);
 
   // ログをカラー表示する
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
@@ -73,16 +74,30 @@ void loop() {
   robot_info.getCommunicateData(send_data);
 
   const unsigned char SLAVE_ADDR = 0x54;
-  Wire.beginTransmission(SLAVE_ADDR);
-  Wire.write(send_data, DATA_SIZE);
+  // Wire.beginTransmission(SLAVE_ADDR);
+  // Wire.write(send_data, DATA_SIZE);
   
-  if(Wire.endTransmission() == 0) {
-    M5_LOGI("Sent command!");
-  } else {
-    M5_LOGI("Failed to send command!");
-  }
+  // if(Wire.endTransmission() == 0) {
+  //   M5_LOGI("Sent command!");
+  // } else {
+  //   M5_LOGI("Failed to send command!");
+  // }
 
   // リセット処理
+  if (M5.BtnA.wasPressed()) {
+    M5_LOGI("Button A was pressed!"); 
+
+    Wire.beginTransmission(SLAVE_ADDR);
+    Wire.write(send_data, DATA_SIZE);
+    byte result = Wire.endTransmission() ;
+    
+    if(result == 0) {
+      M5_LOGI("Sent command!");
+    } else {
+      M5_LOGI("Failed to send command!");
+    }
+  }
+
   if (M5.BtnA.isHolding()) {
     M5_LOGI("Button A is holding!"); 
     ESP.restart();
