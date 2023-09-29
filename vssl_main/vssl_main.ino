@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <Wire.h>
-#include <M5Unified.h>
+// #include <Wire.h>
+#include <M5Stack.h>
 
 #include "command_receiver.h"
 #include "robot_information.hpp"
@@ -22,37 +22,38 @@
 CommandReceiver g_receiver;
 
 void setup() {
-  auto cfg = M5.config();
-  M5.begin(cfg);
+  M5.begin();
 
   // ログをカラー表示する
-  M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
-  M5.Log.setEnableColor(m5::log_target_serial, true);
+  // M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
+  // M5.Log.setEnableColor(m5::log_target_serial, true);
 
 
   const IPAddress ip(192,168,11,20);
   const IPAddress subnet(255,255,255,0);
   if(!connect_wifi_via_smart_config(ip, ip, subnet)) {
-    M5_LOGI("Failed to connect Wi-Fi. Reset.");
+    // M5_LOGI("Failed to connect Wi-Fi. Reset.");
     ESP.restart();
   }
 
   if(!g_receiver.begin(10003)) {
-    M5_LOGI("Failed to begin udp connection. Reset.");
+    // M5_LOGI("Failed to begin udp connection. Reset.");
     ESP.restart();
   }
 
-  Wire.begin(M5.Ex_I2C.getSDA(), M5.Ex_I2C.getSCL());
+  // Wire.begin(M5.Ex_I2C.getSDA(), M5.Ex_I2C.getSCL());
+  Wire.begin(21, 22);
+  // M5.Ex_I2C.begin();
 
-  M5_LOGI("Hello, world!");
+  // M5_LOGI("Hello, world!");
 }
 
 void loop() {
-  M5.delay(1);
+  // M5.delay(1);
   M5.update();
 
   if(g_receiver.receive()) {
-    M5_LOGD("Received command!");
+    // M5_LOGD("Received command!");
   }
 
   RobotControl command = g_receiver.get_latest_command();
@@ -85,22 +86,28 @@ void loop() {
 
   // リセット処理
   if (M5.BtnA.wasPressed()) {
-    M5_LOGI("Button A was pressed!"); 
+    // M5_LOGI("Button A was pressed!"); 
 
+    // if(!M5.Ex_I2C.start(SLAVE_ADDR, false, 1000)) {
+      // M5_LOGI("Failed to start i2c communication!");
+    // }
     Wire.beginTransmission(SLAVE_ADDR);
     Wire.write(send_data, DATA_SIZE);
     byte result = Wire.endTransmission() ;
+
+    // auto result = M5.Ex_I2C.stop();
+    // auto result = true;
     
     if(result == 0) {
-      M5_LOGI("Sent command!");
+      // M5_LOGI("Sent command!");
     } else {
-      M5_LOGI("Failed to send command!");
+      // M5_LOGI("Failed to send command!");
     }
   }
 
-  if (M5.BtnA.isHolding()) {
-    M5_LOGI("Button A is holding!"); 
-    ESP.restart();
-  }
+  // if (M5.BtnA.isHolding()) {
+    // M5_LOGI("Button A is holding!"); 
+    // ESP.restart();
+  // }
 
 }

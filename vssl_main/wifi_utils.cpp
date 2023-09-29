@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <M5Unified.h>
+// #include <M5Unified.h>
 
 #include "wifi_utils.h"
 
@@ -28,7 +28,7 @@ bool connect_wifi_via_smart_config(
   WiFi.config(local_ip, gateway, subnet);
   WiFi.begin();
   while (WiFi.status() != WL_CONNECTED) {
-    M5_LOGI("Try to use a previous Wi-Fi connection.");
+    // M5_LOGI("Try to use a previous Wi-Fi connection.");
     delay(DELAY_MS);
     if ( timeout_prev_connection < millis() ) {
       break;
@@ -41,9 +41,9 @@ bool connect_wifi_via_smart_config(
     WiFi.beginSmartConfig();
     while (!WiFi.smartConfigDone()) {
       delay(DELAY_MS);
-      M5_LOGI("Waiting for SmartConfig");
+      // M5_LOGI("Waiting for SmartConfig");
       if ( timeout_smart_config < millis() ) {
-        M5_LOGW("Failed to detect SmartConfig packet.");
+        // M5_LOGW("Failed to detect SmartConfig packet.");
         return false;
       }
     }
@@ -51,15 +51,15 @@ bool connect_wifi_via_smart_config(
     // Try to connect to new Wi-fi
     while (WiFi.status() != WL_CONNECTED) {
       delay(DELAY_MS);
-      M5_LOGI("Waiting for Wi-fi");
+      // M5_LOGI("Waiting for Wi-fi");
       // 60秒以上接続できなかったら抜ける
       if ( timeout_new_connection < millis() ) {
-        M5_LOGW("Failed to connect Wi-Fi. SSID: %s", WiFi.SSID().c_str());
+        // M5_LOGW("Failed to connect Wi-Fi. SSID: %s", WiFi.SSID().c_str());
         return false;
       }
     }
-    M5_LOGI("----- Wi-Fi Connected -----");
-    M5_LOGI("----- SSID: %s -----", WiFi.SSID().c_str());
+    // M5_LOGI("----- Wi-Fi Connected -----");
+    // M5_LOGI("----- SSID: %s -----", WiFi.SSID().c_str());
   }
 
   return true;
