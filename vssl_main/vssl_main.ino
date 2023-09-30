@@ -21,6 +21,12 @@
 
 CommandReceiver g_receiver;
 
+const IPAddress IP(192,168,11,20);
+const IPAddress SUBNET(255,255,255,0);
+constexpr unsigned int PORT = 10003;
+constexpr unsigned int I2C_CLOCK = 400000;
+constexpr unsigned char SLAVE_ADDR = 0x54;
+
 void setup() {
   // 内部I2Cの通信を停止する
   // 参考: https://x.com/lovyan03/status/1627264113805242370?s=20
@@ -37,29 +43,26 @@ void setup() {
   M5.Log.setEnableColor(m5::log_target_serial, true);
 
 
-  const IPAddress ip(192,168,11,20);
-  const IPAddress subnet(255,255,255,0);
-  if(!connect_wifi_via_smart_config(ip, ip, subnet)) {
+  if(!connect_wifi_via_smart_config(IP, IP, SUBNET)) {
     M5_LOGI("Failed to connect Wi-Fi. Reset.");
     ESP.restart();
   }
 
-  if(!g_receiver.begin(10003)) {
+  if(!g_receiver.begin(PORT)) {
     M5_LOGI("Failed to begin udp connection. Reset.");
     ESP.restart();
   }
 
-  Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL());
+  Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL(), I2C_CLOCK);
 
   M5_LOGI("Hello, world!");
 }
 
 void loop() {
-  M5.delay(1);
   M5.update();
 
   if(g_receiver.receive()) {
-    M5_LOGD("Received command!");
+    // M5_LOGD("Received command!");
   }
 
   RobotControl command = g_receiver.get_latest_command();
@@ -80,20 +83,13 @@ void loop() {
   robot_info.makeCommunicateData();
   robot_info.getCommunicateData(send_data);
 
-  const unsigned char SLAVE_ADDR = 0x54;
   Wire1.beginTransmission(SLAVE_ADDR);
   Wire1.write(send_data, DATA_SIZE);
   
   if(Wire1.endTransmission() == 0) {
-    M5_LOGI("Sent command!");
+    // M5_LOGI("Sent command!");
   } else {
-    M5_LOGI("Failed to send command!");
-  }
-
-  // リセット処理
-  if (M5.BtnA.isHolding()) {
-    M5_LOGI("Button A is holding!"); 
-    ESP.restart();
+    M5_LOGD("Failed to send command!");
   }
 
 }
