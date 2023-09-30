@@ -25,7 +25,19 @@ jobs:
           - { FQBN: stamp-s3, NEED_REPORT: false }
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Copy nanopb files
+        run: |
+          cp nanopb/*.h vssl_main
+          cp nanopb/*.c vssl_main
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: Compile vssl_protocol files
+        run: |
+          python3 nanopb/generator/nanopb_generator.py -Q quote -L quote -I vssl_protocol/proto vssl_protocol/proto/vssl_robot_control.proto -D vssl_main
       - uses: arduino/compile-sketches@v1
         with:
           enable-deltas-report: true
@@ -37,8 +49,8 @@ jobs:
               version: 2.0.7
               source-url: https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/arduino/package_m5stack_index.json
           libraries: |  
-            - source-url: https://github.com/m5stack/M5Unified/archive/refs/tags/0.1.9.zip
-            - source-url: https://github.com/m5stack/M5GFX/archive/refs/tags/0.1.9.zip
+            - name: M5Stack
+              version: 0.4.6
           cli-compile-flags: |  # 警告がエラーとして扱われるので、対処しない警告を除外する
             - --build-property
             - "compiler.cpp.extra_flags= \
