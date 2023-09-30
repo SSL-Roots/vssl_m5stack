@@ -22,7 +22,13 @@
 CommandReceiver g_receiver;
 
 void setup() {
-  M5.begin();
+  auto config = M5.config();
+  config.internal_imu = false;
+  config.internal_rtc = false;
+  M5.begin(config);
+  M5.In_I2C.release();
+  M5.Ex_I2C.release();
+  Wire.end();
 
   // ログをカラー表示する
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
@@ -41,7 +47,7 @@ void setup() {
     ESP.restart();
   }
 
-  Wire.begin(M5.Ex_I2C.getSDA(), M5.Ex_I2C.getSCL());
+  Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL());
 
   M5_LOGI("Hello, world!");
 }
@@ -73,10 +79,10 @@ void loop() {
   robot_info.getCommunicateData(send_data);
 
   const unsigned char SLAVE_ADDR = 0x54;
-  Wire.beginTransmission(SLAVE_ADDR);
-  Wire.write(send_data, DATA_SIZE);
+  Wire1.beginTransmission(SLAVE_ADDR);
+  Wire1.write(send_data, DATA_SIZE);
   
-  if(Wire.endTransmission() == 0) {
+  if(Wire1.endTransmission() == 0) {
     M5_LOGI("Sent command!");
   } else {
     M5_LOGI("Failed to send command!");
