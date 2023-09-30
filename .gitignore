@@ -119,3 +119,9 @@ debug_custom.json
 
 # Requirements specifications
 *.html
+
+# nanopb
+vssl_main/pb*.h
+vssl_main/pb*.c
+vssl_main/*.pb.h
+vssl_main/*.pb.c

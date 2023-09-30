@@ -4,11 +4,11 @@ name: Compile Sketches
 
 on:
   push:
-    paths-ignore:
-    - '**.md'
+    paths:
+      - 'vssl_main/**'
   pull_request:
-    paths-ignore:
-    - '**.md'
+    paths:
+      - 'vssl_main/**'
   workflow_dispatch:
 
 env:
@@ -25,7 +25,20 @@ jobs:
           - { FQBN: stamp-s3, NEED_REPORT: false }
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Copy nanopb files
+        run: |
+          cp nanopb/*.h vssl_main
+          cp nanopb/*.c vssl_main
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: Compile vssl_protocol files
+        run: |
+          pip install protobuf grpcio-tools
+          python3 nanopb/generator/nanopb_generator.py -Q quote -L quote -I vssl_protocol/proto vssl_protocol/proto/vssl_robot_control.proto -D vssl_main
       - uses: arduino/compile-sketches@v1
         with:
           enable-deltas-report: true
