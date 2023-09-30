@@ -15,11 +15,8 @@
 #ifndef ROBOT_INFORMATION_HPP
 #define ROBOT_INFORMATION_HPP
 
-//テストモードではMAX値を使わず、設定された値をそのまま送信する
-#define MAX_VELOCITY 1.0
-#define MAX_ROTATION_VELOCITY 1.0
-// #define MAX_VELOCITY 2.0
-// #define MAX_ROTATION_VELOCITY 6.28
+#define MAX_VELOCITY 2.0
+#define MAX_ROTATION_VELOCITY 6.28
 
 typedef union {
   struct {
