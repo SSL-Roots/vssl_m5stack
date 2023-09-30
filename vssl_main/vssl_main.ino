@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// #include <Wire.h>
+#include <Wire.h>
 #include <M5Stack.h>
 
 #include "command_receiver.h"
@@ -20,40 +20,35 @@
 #include "wifi_utils.h"
 
 CommandReceiver g_receiver;
+constexpr int I2C_SDA = 21;
+constexpr int I2C_SCL = 22;
+const IPAddress IP(192,168,11,20);
+const IPAddress SUBNET(255,255,255,0);
+constexpr int PORT = 10003;
 
 void setup() {
   M5.begin();
+  Serial.begin(115200);
 
-  // ログをカラー表示する
-  // M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
-  // M5.Log.setEnableColor(m5::log_target_serial, true);
-
-
-  const IPAddress ip(192,168,11,20);
-  const IPAddress subnet(255,255,255,0);
-  if(!connect_wifi_via_smart_config(ip, ip, subnet)) {
-    // M5_LOGI("Failed to connect Wi-Fi. Reset.");
+  if(!connect_wifi_via_smart_config(IP, IP, SUBNET)) {
+    // Failed to connect Wi-Fi. Reset.
     ESP.restart();
   }
 
-  if(!g_receiver.begin(10003)) {
-    // M5_LOGI("Failed to begin udp connection. Reset.");
+  if(!g_receiver.begin(PORT)) {
+    // Failed to begin udp connection. Reset.
     ESP.restart();
   }
 
-  // Wire.begin(M5.Ex_I2C.getSDA(), M5.Ex_I2C.getSCL());
-  Wire.begin(21, 22);
-  // M5.Ex_I2C.begin();
-
-  // M5_LOGI("Hello, world!");
+  Wire.begin(I2C_SDA, I2C_SCL);
+  Serial.println("VSSL Robot Start!");
 }
 
 void loop() {
-  // M5.delay(1);
   M5.update();
 
   if(g_receiver.receive()) {
-    // M5_LOGD("Received command!");
+    // Received command!
   }
 
   RobotControl command = g_receiver.get_latest_command();
@@ -75,39 +70,12 @@ void loop() {
   robot_info.getCommunicateData(send_data);
 
   const unsigned char SLAVE_ADDR = 0x54;
-  // Wire.beginTransmission(SLAVE_ADDR);
-  // Wire.write(send_data, DATA_SIZE);
+  Wire.beginTransmission(SLAVE_ADDR);
+  Wire.write(send_data, DATA_SIZE);
   
-  // if(Wire.endTransmission() == 0) {
-  //   M5_LOGI("Sent command!");
-  // } else {
-  //   M5_LOGI("Failed to send command!");
-  // }
-
-  // リセット処理
-  if (M5.BtnA.wasPressed()) {
-    // M5_LOGI("Button A was pressed!"); 
-
-    // if(!M5.Ex_I2C.start(SLAVE_ADDR, false, 1000)) {
-      // M5_LOGI("Failed to start i2c communication!");
-    // }
-    Wire.beginTransmission(SLAVE_ADDR);
-    Wire.write(send_data, DATA_SIZE);
-    byte result = Wire.endTransmission() ;
-
-    // auto result = M5.Ex_I2C.stop();
-    // auto result = true;
-    
-    if(result == 0) {
-      // M5_LOGI("Sent command!");
-    } else {
-      // M5_LOGI("Failed to send command!");
-    }
+  if(Wire.endTransmission() == 0) {
+    // Sent command!
+  } else {
+    // Failed to send command!
   }
-
-  // if (M5.BtnA.isHolding()) {
-    // M5_LOGI("Button A is holding!"); 
-    // ESP.restart();
-  // }
-
 }

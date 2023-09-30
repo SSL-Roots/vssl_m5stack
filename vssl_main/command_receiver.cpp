@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// #include <M5Unified.h>
-
 #include "command_receiver.h"
 #include "pb_encode.h"
 #include "pb_decode.h"
@@ -33,7 +31,7 @@ bool CommandReceiver::begin(const int port) {
 bool CommandReceiver::receive(void) {
   int packetSize = udp_.parsePacket();
   if (packetSize) {
-    // M5_LOGD("received packet");
+    // received packet
     uint8_t receivedBuffer[256];
     int bytesRead = udp_.read(receivedBuffer, sizeof(receivedBuffer));
 
@@ -45,7 +43,7 @@ bool CommandReceiver::receive(void) {
       latest_command_ = receivedMessage;
       return true;
     } else {
-      // M5_LOGD("failed to decode");
+      // failed to decode
       return false;
     }
   }
