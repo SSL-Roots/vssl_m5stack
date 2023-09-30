@@ -10,6 +10,9 @@ Roots VSSLロボットのプログラムです。
 - Arduino libraries:
   - M5Unified
 - Python3
+- Python3 libraries:
+  - protobuf
+  - grpcio-tools
 
 ## Installation
 
@@ -34,6 +37,9 @@ $ cp nanopb/*.c vssl_main
 vssl_protocolの.protoファイルをコンパイルします
 
 ```sh
+# ライブラリをインストール
+$ pip3 install protobuf grpcio-tools
+
 $ cd vssl_m5stack
 $ python3 nanopb/generator/nanopb_generator.py -Q quote -L quote -I vssl_protocol/proto vssl_protocol/proto/vssl_robot_control.proto -D vssl_main
 ```
@@ -51,4 +57,7 @@ pb_common.h  pb_encode.c  vssl_robot_control.pb.h
 1. Arduino環境にM5Stackボード情報を追加します
 1. Arduino環境にM5Unifiedライブラリを追加します
 
+### ソースファイルのビルド
 
+- M5Stack Core向けにビルドする場合は、BoardをM5Stack-Core-ESP32 (esp32)に設定します
+- M5StampS3向けにビルドする場合は、BoardをSTAMP-S3 (esp32)に設定します

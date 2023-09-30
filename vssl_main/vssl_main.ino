@@ -22,6 +22,8 @@
 CommandReceiver g_receiver;
 
 void setup() {
+  // 内部I2Cの通信を停止する
+  // 参考: https://x.com/lovyan03/status/1627264113805242370?s=20
   auto config = M5.config();
   config.internal_imu = false;
   config.internal_rtc = false;
