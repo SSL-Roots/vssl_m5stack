@@ -37,6 +37,7 @@ jobs:
           python-version: '3.10' 
       - name: Compile vssl_protocol files
         run: |
+          pip install protobuf grpcio-tools
           python3 nanopb/generator/nanopb_generator.py -Q quote -L quote -I vssl_protocol/proto vssl_protocol/proto/vssl_robot_control.proto -D vssl_main
       - uses: arduino/compile-sketches@v1
         with:
