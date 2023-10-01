@@ -14,10 +14,9 @@
 
 #include <M5Unified.h>
 #include <Wire.h>
-#include <map>
-#include <functional>
 
 #include "command_receiver.h"
+#include "led_control.hpp"
 #include "robot_information.hpp"
 #include "wifi_utils.h"
 
@@ -28,8 +27,6 @@ const IPAddress SUBNET(255,255,255,0);
 constexpr unsigned int PORT = 10003;
 constexpr unsigned int I2C_CLOCK = 400000;
 constexpr unsigned char SLAVE_ADDR = 0x54;
-
-constexpr unsigned int IO_LED = GPIO_NUM_26;
 
 RobotInformations receive_command() {
   RobotInformations robot_info;
@@ -69,41 +66,6 @@ bool write_robot_info(RobotInformations & robot_info) {
   }
 }
 
-enum class LED_MODE {
-  OFF = 0,
-  CONTINUOUS,
-  BLINK_1HZ,
-};
-static LED_MODE g_led_mode = LED_MODE::OFF;
-
-void led_off() {
-  digitalWrite(IO_LED, LOW);
-}
-
-void led_continuous() {
-  digitalWrite(IO_LED, HIGH);
-}
-
-void led_blink_1hz() {
-  digitalWrite(IO_LED, HIGH);
-  delay(500);
-  digitalWrite(IO_LED, LOW);
-  delay(500);
-}
-
-void led_control_task(void * arg) {
-  std::map<LED_MODE, std::function<void()>> led_mode_map = {
-    {LED_MODE::OFF, led_off},
-    {LED_MODE::CONTINUOUS, led_continuous},
-    {LED_MODE::BLINK_1HZ, led_blink_1hz},
-  };
-
-  while(true) {
-    led_mode_map[g_led_mode]();
-    ets_delay_us(10000);
-  }
-}
-
 RobotInformations g_robot_info;
 void write_robot_info_task(void * arg) {
   while(true) {
@@ -140,9 +102,9 @@ void setup() {
   }
 
   Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL(), I2C_CLOCK);
-  pinMode(IO_LED, OUTPUT);
 
-  xTaskCreateUniversal(led_control_task, "led_control_task", 4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+  led_control::init_gpio();
+  xTaskCreateUniversal(led_control::led_control_task, "led_control_task", 4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(write_robot_info_task, "write_robot_info_task", 4096, NULL, 2, NULL, CONFIG_ARDUINO_RUNNING_CORE);
 
   M5_LOGI("Hello, world!");
@@ -153,11 +115,11 @@ void loop() {
   M5.update();
 
   if(M5.BtnA.isPressed()) {
-    g_led_mode = LED_MODE::CONTINUOUS;
+    led_control::g_led_mode = led_control::LED_MODE::CONTINUOUS;
   } else if(M5.BtnB.isPressed()) {
-    g_led_mode = LED_MODE::BLINK_1HZ;
+    led_control::g_led_mode = led_control::LED_MODE::BLINK_1HZ;
   } else if(M5.BtnC.isPressed()) {
-    g_led_mode = LED_MODE::OFF;
+    led_control::g_led_mode = led_control::LED_MODE::OFF;
   }
 
   g_robot_info = receive_command();
