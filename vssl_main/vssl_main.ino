@@ -13,58 +13,29 @@
 // limitations under the License.
 
 #include <M5Unified.h>
-#include <Wire.h>
 
 #include "command_receiver.h"
+#include "led_control.hpp"
+#include "hardware_test.hpp"
 #include "robot_information.hpp"
+#include "robot_info_writer.hpp"
 #include "wifi_utils.h"
 
 CommandReceiver g_receiver;
 
-void setup() {
-  // 内部I2Cの通信を停止する
-  // 参考: https://x.com/lovyan03/status/1627264113805242370?s=20
-  auto config = M5.config();
-  config.internal_imu = false;
-  config.internal_rtc = false;
-  M5.begin(config);
-  M5.In_I2C.release();
-  M5.Ex_I2C.release();
-  Wire.end();
+const IPAddress IP(192,168,11,20);
+const IPAddress SUBNET(255,255,255,0);
+constexpr unsigned int PORT = 10003;
 
-  // ログをカラー表示する
-  M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
-  M5.Log.setEnableColor(m5::log_target_serial, true);
-
-
-  const IPAddress ip(192,168,11,20);
-  const IPAddress subnet(255,255,255,0);
-  if(!connect_wifi_via_smart_config(ip, ip, subnet)) {
-    M5_LOGI("Failed to connect Wi-Fi. Reset.");
-    ESP.restart();
-  }
-
-  if(!g_receiver.begin(10003)) {
-    M5_LOGI("Failed to begin udp connection. Reset.");
-    ESP.restart();
-  }
-
-  Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL());
-
-  M5_LOGI("Hello, world!");
-}
-
-void loop() {
-  M5.delay(1);
-  M5.update();
+RobotInformations receive_command() {
+  RobotInformations robot_info;
 
   if(g_receiver.receive()) {
-    M5_LOGD("Received command!");
+    // M5_LOGD("Received command!");
   }
 
   RobotControl command = g_receiver.get_latest_command();
 
-  RobotInformations robot_info;
   robot_info.setRobotVelocity(command.move_velocity.forward, command.move_velocity.left, command.move_velocity.angular);
 
   // チャージフラグは常時オンする必要あり
@@ -75,25 +46,48 @@ void loop() {
     robot_info.setKickFlag(false);
   }
 
-  const int DATA_SIZE = 7;
-  unsigned char send_data[DATA_SIZE];
-  robot_info.makeCommunicateData();
-  robot_info.getCommunicateData(send_data);
+  return robot_info;
+}
 
-  const unsigned char SLAVE_ADDR = 0x54;
-  Wire1.beginTransmission(SLAVE_ADDR);
-  Wire1.write(send_data, DATA_SIZE);
-  
-  if(Wire1.endTransmission() == 0) {
-    M5_LOGI("Sent command!");
-  } else {
-    M5_LOGI("Failed to send command!");
-  }
 
-  // リセット処理
-  if (M5.BtnA.isHolding()) {
-    M5_LOGI("Button A is holding!"); 
+void setup() {
+  // 内部I2Cの通信を停止する
+  // 参考: https://x.com/lovyan03/status/1627264113805242370?s=20
+  auto config = M5.config();
+  config.output_power = false;
+  config.pmic_button = false;
+  config.internal_imu = false;
+  config.internal_rtc = false;
+  config.internal_spk = false;
+  config.internal_mic = false;
+  M5.begin(config);
+
+  // ログをカラー表示する
+  M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
+  M5.Log.setEnableColor(m5::log_target_serial, true);
+
+  if(!connect_wifi_via_smart_config(IP, IP, SUBNET)) {
+    M5_LOGI("Failed to connect Wi-Fi. Reset.");
     ESP.restart();
   }
 
+  if(!g_receiver.begin(PORT)) {
+    M5_LOGI("Failed to begin udp connection. Reset.");
+    ESP.restart();
+  }
+
+  xTaskCreateUniversal(led_control::led_control_task, "led_control_task",
+                       4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(robot_info_writer::write_robot_info_task, "write_robot_info_task",
+                       4096, NULL, 2, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(hardware_test::hardware_test_task, "hardware_test_task",
+                       4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+
+  M5_LOGI("Hello, world!");
+}
+
+void loop() {
+  M5.update();
+
+  // robot_info_writer::g_robot_info = receive_command();
 }
