@@ -48,6 +48,13 @@ RobotInformations receive_command() {
   return robot_info;
 }
 
+void hardware_test_task(void * arg) {
+
+  while (true) {
+    delay(100);
+  }
+}
+
 
 void setup() {
   // 内部I2Cの通信を停止する
@@ -87,11 +94,11 @@ void loop() {
   M5.update();
 
   if(M5.BtnA.isPressed()) {
-    led_control::g_led_mode = led_control::LED_MODE::CONTINUOUS;
+    led_control::set_continuous();
   } else if(M5.BtnB.isPressed()) {
-    led_control::g_led_mode = led_control::LED_MODE::BLINK_1HZ;
+    led_control::set_blink_ms(500);
   } else if(M5.BtnC.isPressed()) {
-    led_control::g_led_mode = led_control::LED_MODE::OFF;
+    led_control::turn_off();
   }
 
   robot_info_writer::g_robot_info = receive_command();

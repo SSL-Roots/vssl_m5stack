@@ -19,8 +19,15 @@
 
 namespace led_control {
 
+enum class LED_MODE {
+  OFF = 0,
+  CONTINUOUS,
+  BLINK_1HZ
+};
+
 const unsigned int IO_LED = GPIO_NUM_26;
 LED_MODE g_led_mode = LED_MODE::OFF;
+unsigned int g_blink_ms = 500;
 
 void led_off(void) {
   digitalWrite(IO_LED, LOW);
@@ -32,9 +39,9 @@ void led_continuous(void) {
 
 void led_blink_1hz(void) {
   digitalWrite(IO_LED, HIGH);
-  delay(500);
+  delay(g_blink_ms);
   digitalWrite(IO_LED, LOW);
-  delay(500);
+  delay(g_blink_ms);
 }
 
 void led_control_task(void * arg) {
@@ -52,6 +59,19 @@ void led_control_task(void * arg) {
     led_mode_map[g_led_mode]();
     delay(100);
   }
+}
+
+void turn_off() {
+  g_led_mode = LED_MODE::OFF;
+}
+
+void set_continuous(void) {
+  g_led_mode = LED_MODE::CONTINUOUS;
+}
+
+void set_blink_ms(const unsigned int ms) {
+  g_led_mode = LED_MODE::BLINK_1HZ;
+  g_blink_ms = ms;
 }
 
 }

@@ -20,15 +20,11 @@
 
 namespace led_control {
 
-enum class LED_MODE {
-  OFF = 0,
-  CONTINUOUS,
-  BLINK_1HZ,
-};
-
-extern LED_MODE g_led_mode;
-
 void led_control_task(void * arg);
+
+void turn_off();
+void set_continuous(void);
+void set_blink_ms(const unsigned int ms);
 
 }  // namespace led_control
 
