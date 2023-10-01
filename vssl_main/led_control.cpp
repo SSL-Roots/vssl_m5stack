@@ -22,12 +22,14 @@ namespace led_control {
 enum class LED_MODE {
   OFF = 0,
   CONTINUOUS,
-  BLINK_1HZ
+  BLINK,
+  NUMBER
 };
 
 const unsigned int IO_LED = GPIO_NUM_26;
 LED_MODE g_led_mode = LED_MODE::OFF;
 unsigned int g_blink_ms = 500;
+unsigned int g_number = 0;
 
 void led_off(void) {
   digitalWrite(IO_LED, LOW);
@@ -37,18 +39,29 @@ void led_continuous(void) {
   digitalWrite(IO_LED, HIGH);
 }
 
-void led_blink_1hz(void) {
+void led_blink(void) {
   digitalWrite(IO_LED, HIGH);
   delay(g_blink_ms);
   digitalWrite(IO_LED, LOW);
   delay(g_blink_ms);
 }
 
+void led_number(void) {
+  for (unsigned int i = 0; i < g_number; i++) {
+    digitalWrite(IO_LED, HIGH);
+    delay(100);
+    digitalWrite(IO_LED, LOW);
+    delay(100);
+  }
+  delay(1000);
+}
+
 void led_control_task(void * arg) {
   std::map<LED_MODE, std::function<void(void)>> led_mode_map = {
     {LED_MODE::OFF, led_off},
     {LED_MODE::CONTINUOUS, led_continuous},
-    {LED_MODE::BLINK_1HZ, led_blink_1hz},
+    {LED_MODE::BLINK, led_blink},
+    {LED_MODE::NUMBER, led_number},
   };
 
   pinMode(IO_LED, OUTPUT);
@@ -70,8 +83,13 @@ void set_continuous(void) {
 }
 
 void set_blink_ms(const unsigned int ms) {
-  g_led_mode = LED_MODE::BLINK_1HZ;
+  g_led_mode = LED_MODE::BLINK;
   g_blink_ms = ms;
+}
+
+void set_number(const unsigned int number) {
+  g_led_mode = LED_MODE::NUMBER;
+  g_number = number;
 }
 
 }

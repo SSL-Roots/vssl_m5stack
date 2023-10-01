@@ -25,6 +25,7 @@ void led_control_task(void * arg);
 void turn_off();
 void set_continuous(void);
 void set_blink_ms(const unsigned int ms);
+void set_number(const unsigned int number);
 
 }  // namespace led_control
 

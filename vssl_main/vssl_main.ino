@@ -94,11 +94,11 @@ void loop() {
   M5.update();
 
   if(M5.BtnA.isPressed()) {
-    led_control::set_continuous();
+    led_control::set_number(1);
   } else if(M5.BtnB.isPressed()) {
-    led_control::set_blink_ms(500);
+    led_control::set_number(3);
   } else if(M5.BtnC.isPressed()) {
-    led_control::turn_off();
+    led_control::set_number(5);
   }
 
   robot_info_writer::g_robot_info = receive_command();
