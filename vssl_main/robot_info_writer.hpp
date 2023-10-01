@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LED_CONTROL_HPP
-#define LED_CONTROL_HPP
+#ifndef ROBOT_INFO_WRITER_HPP
+#define ROBOT_INFO_WRITER_HPP
 
-#include <map>
-#include <functional>
+#include "robot_information.hpp"
 
-namespace led_control {
+namespace robot_info_writer {
 
-enum class LED_MODE {
-  OFF = 0,
-  CONTINUOUS,
-  BLINK_1HZ,
-};
+extern RobotInformations g_robot_info;
 
-extern LED_MODE g_led_mode;
+void write_robot_info_task(void * arg);
 
-void led_control_task(void * arg);
+}  // namespace robot_info_writer
 
-}  // namespace led_control
-
-#endif  // LED_CONTROL_HPP
+#endif  // ROBOT_INFO_WRITER_HPP

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 #include <M5Unified.h>
-#include <Wire.h>
 
 #include "command_receiver.h"
 #include "led_control.hpp"
 #include "robot_information.hpp"
+#include "robot_info_writer.hpp"
 #include "wifi_utils.h"
 
 CommandReceiver g_receiver;
@@ -25,8 +25,6 @@ CommandReceiver g_receiver;
 const IPAddress IP(192,168,11,20);
 const IPAddress SUBNET(255,255,255,0);
 constexpr unsigned int PORT = 10003;
-constexpr unsigned int I2C_CLOCK = 400000;
-constexpr unsigned char SLAVE_ADDR = 0x54;
 
 RobotInformations receive_command() {
   RobotInformations robot_info;
@@ -50,42 +48,18 @@ RobotInformations receive_command() {
   return robot_info;
 }
 
-bool write_robot_info(RobotInformations & robot_info) {
-  const int DATA_SIZE = 7;
-  unsigned char send_data[DATA_SIZE];
-  robot_info.makeCommunicateData();
-  robot_info.getCommunicateData(send_data);
-
-  Wire1.beginTransmission(SLAVE_ADDR);
-  Wire1.write(send_data, DATA_SIZE);
-  
-  if(Wire1.endTransmission() == 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-RobotInformations g_robot_info;
-void write_robot_info_task(void * arg) {
-  while(true) {
-    if (!write_robot_info(g_robot_info)) {
-      M5_LOGI("Failed to write command.");
-    }
-    ets_delay_us(1000);
-  }
-}
 
 void setup() {
   // 内部I2Cの通信を停止する
   // 参考: https://x.com/lovyan03/status/1627264113805242370?s=20
   auto config = M5.config();
+  config.output_power = false;
+  config.pmic_button = false;
   config.internal_imu = false;
   config.internal_rtc = false;
+  config.internal_spk = false;
+  config.internal_mic = false;
   M5.begin(config);
-  M5.In_I2C.release();
-  M5.Ex_I2C.release();
-  Wire.end();
 
   // ログをカラー表示する
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
@@ -101,14 +75,13 @@ void setup() {
     ESP.restart();
   }
 
-  Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL(), I2C_CLOCK);
-
-  xTaskCreateUniversal(led_control::led_control_task, "led_control_task", 4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
-  xTaskCreateUniversal(write_robot_info_task, "write_robot_info_task", 4096, NULL, 2, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(led_control::led_control_task, "led_control_task",
+                       4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(robot_info_writer::write_robot_info_task, "write_robot_info_task",
+                       4096, NULL, 2, NULL, CONFIG_ARDUINO_RUNNING_CORE);
 
   M5_LOGI("Hello, world!");
 }
-
 
 void loop() {
   M5.update();
@@ -121,5 +94,5 @@ void loop() {
     led_control::g_led_mode = led_control::LED_MODE::OFF;
   }
 
-  g_robot_info = receive_command();
+  robot_info_writer::g_robot_info = receive_command();
 }
