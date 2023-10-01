@@ -22,10 +22,6 @@ namespace led_control {
 const unsigned int IO_LED = GPIO_NUM_26;
 LED_MODE g_led_mode = LED_MODE::OFF;
 
-void init_gpio(void) {
-  pinMode(IO_LED, OUTPUT);
-}
-
 void led_off(void) {
   digitalWrite(IO_LED, LOW);
 }
@@ -48,11 +44,13 @@ void led_control_task(void * arg) {
     {LED_MODE::BLINK_1HZ, led_blink_1hz},
   };
 
+  pinMode(IO_LED, OUTPUT);
+
   M5_LOGI("LED Control Task Start!");
 
   while (true) {
     led_mode_map[g_led_mode]();
-    ets_delay_us(1000);
+    delay(100);
   }
 }
 

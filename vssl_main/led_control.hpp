@@ -28,7 +28,6 @@ enum class LED_MODE {
 
 extern LED_MODE g_led_mode;
 
-void init_gpio(void);
 void led_control_task(void * arg);
 
 }  // namespace led_control

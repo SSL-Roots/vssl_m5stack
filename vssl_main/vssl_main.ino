@@ -103,7 +103,6 @@ void setup() {
 
   Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL(), I2C_CLOCK);
 
-  led_control::init_gpio();
   xTaskCreateUniversal(led_control::led_control_task, "led_control_task", 4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(write_robot_info_task, "write_robot_info_task", 4096, NULL, 2, NULL, CONFIG_ARDUINO_RUNNING_CORE);
 
