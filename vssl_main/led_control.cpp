@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include <M5Unified.h>
+#include <map>
+#include <functional>
 
 #include "led_control.hpp"
 

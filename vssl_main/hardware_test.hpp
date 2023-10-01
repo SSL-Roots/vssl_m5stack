@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LED_CONTROL_HPP
-#define LED_CONTROL_HPP
+#ifndef HARDWARE_TEST_HPP 
+#define HARDWARE_TEST_HPP
 
-namespace led_control {
+#include <map>
+#include <functional>
 
-void led_control_task(void * arg);
+namespace hardware_test {
 
-void turn_off();
-void set_continuous(void);
-void set_blink_ms(const unsigned int ms);
-void set_number(const unsigned int number);
+void hardware_test_task(void * arg);
 
-}  // namespace led_control
+}  // namespace hardware_test
 
-#endif  // LED_CONTROL_HPP
+#endif  // HARDWARE_TEST_HPP

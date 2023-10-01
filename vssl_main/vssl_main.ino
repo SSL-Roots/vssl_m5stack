@@ -16,6 +16,7 @@
 
 #include "command_receiver.h"
 #include "led_control.hpp"
+#include "hardware_test.hpp"
 #include "robot_information.hpp"
 #include "robot_info_writer.hpp"
 #include "wifi_utils.h"
@@ -46,13 +47,6 @@ RobotInformations receive_command() {
   }
 
   return robot_info;
-}
-
-void hardware_test_task(void * arg) {
-
-  while (true) {
-    delay(100);
-  }
 }
 
 
@@ -86,6 +80,8 @@ void setup() {
                        4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(robot_info_writer::write_robot_info_task, "write_robot_info_task",
                        4096, NULL, 2, NULL, CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(hardware_test::hardware_test_task, "hardware_test_task",
+                       4096, NULL, 1, NULL, CONFIG_ARDUINO_RUNNING_CORE);
 
   M5_LOGI("Hello, world!");
 }
@@ -93,13 +89,5 @@ void setup() {
 void loop() {
   M5.update();
 
-  if(M5.BtnA.isPressed()) {
-    led_control::set_number(1);
-  } else if(M5.BtnB.isPressed()) {
-    led_control::set_number(3);
-  } else if(M5.BtnC.isPressed()) {
-    led_control::set_number(5);
-  }
-
-  robot_info_writer::g_robot_info = receive_command();
+  // robot_info_writer::g_robot_info = receive_command();
 }
