@@ -16,8 +16,9 @@
 #include <map>
 #include <functional>
 
-#include "led_control.hpp"
 #include "hardware_test.hpp"
+#include "led_control.hpp"
+#include "menu_select.hpp"
 #include "robot_information.hpp"
 #include "robot_info_writer.hpp"
 
@@ -104,45 +105,24 @@ void hardware_test_task(void * arg) {
     {TEST_LIST::OMEGA_MIN_MAX, test_omega_min_max},
   };
 
-  const unsigned int THRESHOLD_MS_SUSPEND = 5000;
-  const unsigned int THRESHOLD_MS_EXECUTE_TEST = 1000;
-  const unsigned int THRESHOLD_MS_CHANGE_TEST = 10;
   unsigned int test_index = 1;
-  unsigned int pressed_ms = millis();
 
   led_control::set_number(test_index);
 
   M5_LOGI("Hardware Test Task Start!");
   while (true) {
-    unsigned elapsed_time = 0;
-    // ボタンを何ms以上押したかで処理を変更する
-    if (M5.BtnA.isPressed()) {
-      pressed_ms = millis();
+    auto elapsed_time = menu_select::watch_button_press();
 
-      while (M5.BtnA.isPressed()) {
-        elapsed_time = millis() - pressed_ms;
-
-        // LED点灯を操作して、ボタンが押されていることを示す
-        if (elapsed_time > THRESHOLD_MS_SUSPEND) {
-          led_control::set_blink_ms(50);
-        } else if (elapsed_time > THRESHOLD_MS_EXECUTE_TEST) {
-          led_control::set_blink_ms(200);
-        }
-        M5.update();
-        delay(1);
-      }
-    }
-
-    if (elapsed_time > THRESHOLD_MS_SUSPEND) {
+    if (elapsed_time > menu_select::LONG_PRESS_MS) {
       M5_LOGI("Suspend this task.");
       led_control::turn_off();
       vTaskSuspend(NULL);
 
-    } else if (elapsed_time > THRESHOLD_MS_EXECUTE_TEST) {
+    } else if (elapsed_time > menu_select::MIDDLE_PRESS_MS) {
       M5_LOGI("Test index: %d Start!", test_index);
       test_map[static_cast<TEST_LIST>(test_index)]();
 
-    } else if (elapsed_time > THRESHOLD_MS_CHANGE_TEST) {
+    } else if (elapsed_time > menu_select::SHORT_PRESS_MS) {
       test_index++;
       if (test_index >= static_cast<unsigned int>(TEST_LIST::TEST_NUM)) {
         test_index = 1;
