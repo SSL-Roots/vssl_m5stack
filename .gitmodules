@@ -1,0 +1,6 @@
+[submodule "vssl_protocol"]
+	path = vssl_protocol
+	url = https://github.com/SSL-Roots/vssl_protocol.git
+[submodule "nanopb"]
+	path = nanopb
+	url = https://github.com/nanopb/nanopb.git
