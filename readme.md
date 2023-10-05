@@ -1,33 +1,63 @@
 # vssl_m5stack
 
-Roots VSSLロボットのm5stackプログラムです。
+Roots VSSLロボットのプログラムです。
 
-## 開発環境のセットアップ方法
-### 前提条件
-OS: Ubuntu 20.04  or higher
+## Requirements
 
-### 手順
-1. ROS2 foxyをインストールする
-2. VSCodeをインストールする
-3. VSCodeにPlatformIO拡張をインストールする
-4. VSCodeで「PIO Home」->「Open Project」としてこのリポジトリを開く
+- Arduino IDE（またはVSCodeのArduino拡張）
+- Arduino boards:
+  - M5Stack
+- Arduino libraries:
+  - M5Unified
+- Python3
+- Python3 libraries:
+  - protobuf
+  - grpcio-tools
 
+## Installation
 
-## 現状のプログラムの動作確認方法
+### vssl_protocolとnanopbのダウンロード
 
-1. ESP32 BasicをPCに接続する
-2. `include/secrets.h` を作成し、以下の内容を書き込む
-    ```
-    #ifndef __SECRETS_H__
-    #define __SECRETS_H__
+VSSL通信プロトコルのvssl_protocolと、
+Google Protocol Buffersを使うためのnanopbライブラリをダウンロードします
 
-    #define SSID "<your 2.4GHz SSID>"
-    #define PSK "<your SSID Password>"
+```sh
+$ cd vssl_m5stack
+$ git submodule update --init --recursive
+```
 
-    #endif
-    ```
+nanopb内のヘッダーファイルとソースファイルをコピーします
 
-3. PlatformIOでビルド・書き込みを行う
-4. Linuxのターミナルで以下のコマンドを使って micro-ROS agentを立ち上げる
-    `docker run -it --rm -v /dev:/dev -v /dev/shm:/dev/shm --privileged --net=host microros/micro-ros-agent:$ROS_DISTRO udp4 --port 8888 -v6`
-5. 別のターミナルで `ros2 topic echo micro_ros_platformio_node_publisher` を実行し、PublishされたメッセージをSubscribeする
+```sh
+$ cd vssl_m5stack
+$ cp nanopb/*.h vssl_main
+$ cp nanopb/*.c vssl_main
+```
+
+vssl_protocolの.protoファイルをコンパイルします
+
+```sh
+# ライブラリをインストール
+$ pip3 install protobuf grpcio-tools
+
+$ cd vssl_m5stack
+$ python3 nanopb/generator/nanopb_generator.py -Q quote -L quote -I vssl_protocol/proto vssl_protocol/proto/vssl_robot_control.proto -D vssl_main
+```
+
+作業後、vssl_mainディレクトリがに下記のファイルが追加されます。
+
+```sh
+pb.h         pb_decode.c  pb_encode.h
+pb_common.c  pb_decode.h  vssl_robot_control.pb.c
+pb_common.h  pb_encode.c  vssl_robot_control.pb.h
+```
+
+### Arduino
+
+1. Arduino環境にM5Stackボード情報を追加します
+1. Arduino環境にM5Unifiedライブラリを追加します
+
+### ソースファイルのビルド
+
+- M5Stack Core向けにビルドする場合は、BoardをM5Stack-Core-ESP32 (esp32)に設定します
+- M5StampS3向けにビルドする場合は、BoardをSTAMP-S3 (esp32)に設定します
