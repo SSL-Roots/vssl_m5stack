@@ -14,45 +14,14 @@
 
 #include <M5Unified.h>
 
-#include "command_receiver.h"
 #include "led_control.hpp"
 #include "menu_select.hpp"
 #include "hardware_test.hpp"
-#include "robot_information.hpp"
+#include "robocup_core.hpp"
 #include "robot_info_writer.hpp"
-#include "wifi_utils.h"
 
-CommandReceiver g_receiver;
-
-const IPAddress IP(192,168,11,20);
-const IPAddress SUBNET(255,255,255,0);
-constexpr unsigned int PORT = 10003;
-
-RobotInformations receive_command() {
-  RobotInformations robot_info;
-
-  if(g_receiver.receive()) {
-    // M5_LOGD("Received command!");
-  }
-
-  RobotControl command = g_receiver.get_latest_command();
-
-  robot_info.setRobotVelocity(command.move_velocity.forward, command.move_velocity.left, command.move_velocity.angular);
-
-  // チャージフラグは常時オンする必要あり
-  robot_info.setChargeFlag(true);
-  if (command.kick_speed > 0.0) {
-    robot_info.setKickFlag(true);
-  } else {
-    robot_info.setKickFlag(false);
-  }
-
-  return robot_info;
-}
-
-xTaskHandle g_led_control_task_handle = NULL;
-xTaskHandle g_write_robot_info_task_handle = NULL;
 xTaskHandle g_hardware_test_task_handle = NULL;
+xTaskHandle g_robocup_core_task_handle = NULL;
 std::vector<xTaskHandle> g_selectable_task_handles;
 
 void task_selct_task(void * arg) {
@@ -122,30 +91,27 @@ void setup() {
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
   M5.Log.setEnableColor(m5::log_target_serial, true);
 
-  if(!connect_wifi_via_smart_config(IP, IP, SUBNET)) {
-    M5_LOGI("Failed to connect Wi-Fi. Reset.");
-    ESP.restart();
-  }
-
-  if(!g_receiver.begin(PORT)) {
-    M5_LOGI("Failed to begin udp connection. Reset.");
-    ESP.restart();
-  }
-
   xTaskCreateUniversal(led_control::led_control_task, "led_control_task",
-                       4096, NULL, 1, &g_led_control_task_handle,
+                       4096, NULL, 1, NULL,
                        CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(robot_info_writer::write_robot_info_task, "write_robot_info_task",
-                       4096, NULL, 2, &g_write_robot_info_task_handle,
+                       4096, NULL, 2, NULL,
                        CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(hardware_test::hardware_test_task, "hardware_test_task",
                        4096, NULL, 1, &g_hardware_test_task_handle,
+                       CONFIG_ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(robocup_core::robocup_core_task, "robocup_core_task",
+                       4096, NULL, 1, &g_robocup_core_task_handle,
                        CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(task_selct_task, "task_select_task",
                        4096, NULL, 1, NULL,
                        CONFIG_ARDUINO_RUNNING_CORE);
 
   g_selectable_task_handles.push_back(g_hardware_test_task_handle);
+  g_selectable_task_handles.push_back(g_robocup_core_task_handle);
+
+  // TODO(ShotaAk)前回のタスクを実行する
+  vTaskSuspend(g_robocup_core_task_handle);
 
   M5_LOGI("Hello, world!");
 }
@@ -154,5 +120,4 @@ void loop() {
   M5.update();
 
   delay(1);
-  // robot_info_writer::g_robot_info = receive_command();
 }

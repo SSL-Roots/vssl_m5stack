@@ -49,6 +49,7 @@ unsigned long watch_button_press(void) {
       M5.update();
       delay(1);
     }
+    led_control::turn_off();
   }
 
   return elapsed_time;
