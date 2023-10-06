@@ -58,9 +58,10 @@ bool connect_wifi_via_smart_config(
         return false;
       }
     }
-    M5_LOGI("----- Wi-Fi Connected -----");
-    M5_LOGI("----- SSID: %s -----", WiFi.SSID().c_str());
   }
+
+  M5_LOGI("----- Wi-Fi Connected -----");
+  M5_LOGI("----- SSID: %s -----", WiFi.SSID().c_str());
 
   return true;
 }
