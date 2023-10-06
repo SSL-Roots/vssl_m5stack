@@ -17,10 +17,16 @@
 
 #include <WiFi.h>
 
+namespace wifi_utils {
+
 bool connect_wifi_via_smart_config(
-    const IPAddress local_ip, const IPAddress gateway, const IPAddress subnet,
-    const int timeout_prev_connection=10000,
-    const int timeout_smart_config=30000,
-    const int timeout_new_connection=30000);
+  const IPAddress local_ip, const IPAddress gateway, const IPAddress subnet,
+  const int timeout_prev_connection=10000,
+  const int timeout_smart_config=30000,
+  const int timeout_new_connection=30000);
+
+bool disconnect_wifi(void);
+
+}  // namespace wifi_utils
 
 #endif  // WIFI_UTILS_H

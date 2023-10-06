@@ -20,7 +20,7 @@
 #include "robocup_core.hpp"
 #include "robot_information.hpp"
 #include "robot_info_writer.hpp"
-#include "wifi_utils.h"
+#include "wifi_utils.hpp"
 
 
 namespace robocup_core {
@@ -54,13 +54,14 @@ void robocup_core_task(void * arg) {
   const IPAddress SUBNET(255,255,255,0);
   constexpr unsigned int PORT = 10003;
 
-  if(!connect_wifi_via_smart_config(IP, IP, SUBNET)) {
+  if(!wifi_utils::connect_wifi_via_smart_config(IP, IP, SUBNET)) {
     M5_LOGE("Failed to connect Wi-Fi. Suspend myself.");
     vTaskSuspend(NULL);
   }
 
   if(!g_receiver.begin(PORT)) {
     M5_LOGI("Failed to begin udp connection. Suspend myself.");
+    wifi_utils::disconnect_wifi();
     vTaskSuspend(NULL);
   }
 
@@ -71,6 +72,7 @@ void robocup_core_task(void * arg) {
     if (elapsed_time > menu_select::LONG_PRESS_MS) {
       M5_LOGI("Suspend myself.");
       led_control::turn_off();
+      wifi_utils::disconnect_wifi();
       vTaskSuspend(NULL);
 
     } else if (elapsed_time > menu_select::MIDDLE_PRESS_MS) {
