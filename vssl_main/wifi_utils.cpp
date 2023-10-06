@@ -14,7 +14,9 @@
 
 #include <M5Unified.h>
 
-#include "wifi_utils.h"
+#include "wifi_utils.hpp"
+
+namespace wifi_utils {
 
 bool connect_wifi_via_smart_config(
     const IPAddress local_ip, const IPAddress gateway, const IPAddress subnet,
@@ -58,9 +60,18 @@ bool connect_wifi_via_smart_config(
         return false;
       }
     }
-    M5_LOGI("----- Wi-Fi Connected -----");
-    M5_LOGI("----- SSID: %s -----", WiFi.SSID().c_str());
   }
+
+  M5_LOGI("----- Wi-Fi Connected -----");
+  M5_LOGI("----- SSID: %s -----", WiFi.SSID().c_str());
 
   return true;
 }
+
+bool disconnect_wifi(void) {
+  // Turn off Wi-Fi radio
+  // Does not erase the connection info
+  return WiFi.disconnect(true, false);
+}
+
+}  // namespace wifi_utils
