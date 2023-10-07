@@ -8,7 +8,9 @@ Roots VSSLロボットのプログラムです。
 - Arduino boards:
   - M5Stack
 - Arduino libraries:
-  - M5Unified
+  - M5Unified : version 0.1.9
+  - M5GFX : version 0.1.9
+  - FastLED : version 3.6.0
 - Python3
 - Python3 libraries:
   - protobuf
@@ -56,6 +58,8 @@ pb_common.h  pb_encode.c  vssl_robot_control.pb.h
 
 1. Arduino環境にM5Stackボード情報を追加します
 1. Arduino環境にM5Unifiedライブラリを追加します
+1. Arduino環境にM5GFXライブラリを追加します
+1. Arduino環境にFastLEDライブラリを追加します
 
 ### ソースファイルのビルド
 
