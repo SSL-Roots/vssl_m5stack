@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <FastLED.h>
 #include <M5Unified.h>
 #include <map>
 #include <functional>
@@ -33,26 +34,51 @@ LED_MODE g_led_mode = LED_MODE::OFF;
 unsigned int g_blink_ms = 500;
 unsigned int g_number = 0;
 
+CRGB g_leds[1];
+std::map<m5::board_t, std::function<void(void)>> g_led_on_map= {
+  {m5::board_t::board_M5Stack, [](){
+    digitalWrite(IO_LED, HIGH);
+    }},
+  {m5::board_t::board_M5StampS3, [](){
+    g_leds[0] = CRGB::Green;
+    FastLED.show();
+    }},
+};
+std::map<m5::board_t, std::function<void(void)>> g_led_off_map= {
+  {m5::board_t::board_M5Stack, [](){
+    digitalWrite(IO_LED, LOW);
+    }},
+  {m5::board_t::board_M5StampS3, [](){
+    g_leds[0] = CRGB::Black;
+    FastLED.show();
+    }},
+};
+
+
+void led_on(void) {
+  g_led_on_map[M5.getBoard()]();
+}
+
 void led_off(void) {
-  digitalWrite(IO_LED, LOW);
+  g_led_off_map[M5.getBoard()]();
 }
 
 void led_continuous(void) {
-  digitalWrite(IO_LED, HIGH);
+  led_on();
 }
 
 void led_blink(void) {
-  digitalWrite(IO_LED, HIGH);
+  led_on();
   delay(g_blink_ms);
-  digitalWrite(IO_LED, LOW);
+  led_off();
   delay(g_blink_ms);
 }
 
 void led_number(void) {
   for (unsigned int i = 0; i < g_number; i++) {
-    digitalWrite(IO_LED, HIGH);
+    led_on();
     delay(100);
-    digitalWrite(IO_LED, LOW);
+    led_off();
     delay(100);
   }
   delay(1000);
@@ -66,7 +92,11 @@ void led_control_task(void * arg) {
     {LED_MODE::NUMBER, led_number},
   };
 
-  pinMode(IO_LED, OUTPUT);
+  if (M5.getBoard() == m5::board_t::board_M5StampS3) {
+    FastLED.addLeds<WS2812, GPIO_NUM_21, GRB>(g_leds, 1);
+  } else {
+    pinMode(IO_LED, OUTPUT);
+  }
 
   M5_LOGI("LED Control Task Start!");
 

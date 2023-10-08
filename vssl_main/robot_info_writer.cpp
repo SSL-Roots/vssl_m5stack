@@ -46,13 +46,30 @@ void write_robot_info_task(void * arg) {
 
   Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL(), I2C_CLOCK);
 
+  const unsigned int MAX_FAILURE_COUNT = 10;
+  const unsigned int NORMAL_PERIOD_MS = 1;
+  const unsigned int ERROR_PERIOD_MS = 1000;
+
+  unsigned int failure_count = 0;
+  unsigned int task_period_ms = NORMAL_PERIOD_MS;
+
   M5_LOGI("Write Robot Info Task Start!");
 
   while (true) {
     if (!write_robot_info(g_robot_info)) {
-      M5_LOGI("Failed to write robot info.");
+      M5_LOGE("Failed to write robot info.");
+
+      if (failure_count > MAX_FAILURE_COUNT) {
+        task_period_ms = ERROR_PERIOD_MS;
+      } else {
+        failure_count++;
+      }
+    } else {
+      failure_count = 0;
+      task_period_ms = NORMAL_PERIOD_MS;
     }
-    delay(1);
+
+    delay(task_period_ms);
   }
 }
 

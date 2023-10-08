@@ -118,6 +118,5 @@ void setup() {
 
 void loop() {
   M5.update();
-
-  delay(1);
+  delay(100);
 }
