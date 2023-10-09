@@ -24,6 +24,7 @@ class CommandReceiver {
   CommandReceiver();
   ~CommandReceiver();
   bool begin(const int port=10001);
+  void stop(void);
   bool receive(void);
   RobotControl get_latest_command(void) const { return latest_command_; }
 

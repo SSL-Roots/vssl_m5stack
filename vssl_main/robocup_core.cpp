@@ -50,10 +50,16 @@ RobotInformations make_robot_info() {
   return robot_info;
 }
 
+bool restart_receiver(const unsigned int port) {
+  g_receiver.stop();
+  return g_receiver.begin(port);
+}
+
 void robocup_core_task(void * arg) {
   const IPAddress IP(192,168,11,20);
   const IPAddress SUBNET(255,255,255,0);
   constexpr unsigned int PORT_BASE = 10000;
+  const unsigned int MAX_ROBOT_ID = 11;
 
   if(!wifi_utils::connect_wifi_via_smart_config(IP, IP, SUBNET)) {
     M5_LOGE("Failed to connect Wi-Fi. Suspend myself.");
@@ -70,6 +76,7 @@ void robocup_core_task(void * arg) {
   }
 
   M5_LOGI("Start robocup core task. IP: %s, PORT: %d, Robot ID: %d", IP.toString().c_str(), port, robot_id);
+  led_control::set_number(robot_id);
 
   while (true) {
     robot_info_writer::g_robot_info = make_robot_info();
@@ -78,14 +85,34 @@ void robocup_core_task(void * arg) {
     if (elapsed_time > menu_select::LONG_PRESS_MS) {
       M5_LOGI("Suspend myself.");
       led_control::turn_off();
+      // TODO(ShotaAk): タスクをSuspended状態から復帰させてもWiFiは再接続されない
       wifi_utils::disconnect_wifi();
+      g_receiver.stop();
       vTaskSuspend(NULL);
 
     } else if (elapsed_time > menu_select::MIDDLE_PRESS_MS) {
       M5_LOGI("Please press button long time to suspend myself.");
+      if (flash_config::set_robot_id(robot_id)) {
+        M5_LOGI("Succeeded to save robot_id: %d", robot_id);
+      } else {
+        M5_LOGI("Failed to save robot_id: %d", robot_id);
+      }
+      led_control::set_number(robot_id);
 
     } else if (elapsed_time > menu_select::SHORT_PRESS_MS) {
-      M5_LOGI("I am a robocupper.");
+      // ロボットIDを変更する
+      robot_id++;
+      if (robot_id > MAX_ROBOT_ID) {
+        robot_id = 0;
+      }
+
+      if (!restart_receiver(PORT_BASE + robot_id)) {
+        M5_LOGI("Failed to restart udp connection. Suspend myself.");
+        wifi_utils::disconnect_wifi();
+        vTaskSuspend(NULL);
+      }
+      M5_LOGI("I am a RoboCupper. robot_id: %d", robot_id);
+      led_control::set_number(robot_id);
     }
 
     delay(1);
