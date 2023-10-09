@@ -59,6 +59,7 @@ void task_selct_task(void * arg) {
       M5_LOGI("Restart task: %s",
         pcTaskGetName(g_selectable_task_handles[task_index]));
       led_control::turn_off();
+      flash_config::set_mode_number(task_index);
       vTaskResume(g_selectable_task_handles[task_index]);
 
     } else if (elapsed_time > menu_select::MIDDLE_PRESS_MS) {
@@ -115,8 +116,18 @@ void setup() {
   g_selectable_task_handles.push_back(g_hardware_test_task_handle);
   g_selectable_task_handles.push_back(g_robocup_core_task_handle);
 
-  // TODO(ShotaAk)前回のタスクを実行する
-  vTaskSuspend(g_robocup_core_task_handle);
+  // selectableなタスクをすべて停止させる
+  for (auto task_handle : g_selectable_task_handles) {
+    vTaskSuspend(task_handle);
+  }
+
+  // 前回実行したタスクを再開する
+  auto mode_number = flash_config::get_mode_number();
+  if (mode_number < g_selectable_task_handles.size()) {
+    M5_LOGI("Start task: %s",
+      pcTaskGetName(g_selectable_task_handles[mode_number]));
+    vTaskResume(g_selectable_task_handles[mode_number]);
+  }
 
   M5_LOGI("Hello, world!");
 }
