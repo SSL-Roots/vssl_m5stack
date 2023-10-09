@@ -26,8 +26,11 @@ CommandReceiver::~CommandReceiver() {
 }
 
 bool CommandReceiver::begin(const int port) {
-
   return udp_.begin(port);
+}
+
+void CommandReceiver::stop(void) {
+  udp_.stop();
 }
 
 bool CommandReceiver::receive(void) {

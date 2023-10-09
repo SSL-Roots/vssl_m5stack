@@ -12,26 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COMMAND_RECEIVER_H
-#define COMMAND_RECEIVER_H
+#ifndef FLASH_CONFIG_HPP
+#define FLASH_CONFIG_HPP
 
-#include <WiFiUdp.h>
+namespace flash_config {
 
-#include "vssl_robot_control.pb.h"
+bool initialize(void);
 
-class CommandReceiver {
- public:
-  CommandReceiver();
-  ~CommandReceiver();
-  bool begin(const int port=10001);
-  void stop(void);
-  bool receive(void);
-  RobotControl get_latest_command(void) const { return latest_command_; }
+unsigned int get_robot_id(void);
+bool set_robot_id(const unsigned int robot_id);
+unsigned int get_mode_number(void);
+bool set_mode_number(const unsigned int number);
 
- private:
 
-  WiFiUDP udp_;
-  RobotControl latest_command_;
-};
+}  // namespace flash_config
 
-#endif  // COMMAND_RECEIVER_H
+#endif  // FLASH_CONFIG_HPP
