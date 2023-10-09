@@ -14,6 +14,7 @@
 
 #include <M5Unified.h>
 
+#include "flash_config.hpp"
 #include "led_control.hpp"
 #include "menu_select.hpp"
 #include "hardware_test.hpp"
@@ -90,6 +91,10 @@ void setup() {
   // ログをカラー表示する
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_INFO);
   M5.Log.setEnableColor(m5::log_target_serial, true);
+
+  if (!flash_config::initialize()) {
+    M5_LOGE("Failed to initialize flash config.");
+  }
 
   xTaskCreateUniversal(led_control::led_control_task, "led_control_task",
                        4096, NULL, 1, NULL,
