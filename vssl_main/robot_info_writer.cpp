@@ -44,7 +44,7 @@ void write_robot_info_task(void * arg) {
   M5.Ex_I2C.release();
   Wire.end();
 
-  Wire1.begin(M5.In_I2C.getSDA(), M5.In_I2C.getSCL(), I2C_CLOCK);
+  Wire1.begin(M5.Ex_I2C.getSDA(), M5.Ex_I2C.getSCL(), I2C_CLOCK);
 
   const unsigned int MAX_FAILURE_COUNT = 10;
   const unsigned int NORMAL_PERIOD_MS = 1;
