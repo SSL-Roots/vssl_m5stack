@@ -61,18 +61,22 @@ void robocup_core_task(void * arg) {
   constexpr unsigned int PORT_BASE = 10000;
   const unsigned int MAX_ROBOT_ID = 11;
 
-  if(!wifi_utils::connect_wifi_via_smart_config(IP, IP, SUBNET)) {
-    M5_LOGE("Failed to connect Wi-Fi. Suspend myself.");
-    vTaskSuspend(NULL);
-  }
+  led_control::set_blink_ms(100);
 
   auto robot_id = flash_config::get_robot_id();
   auto port = PORT_BASE + robot_id;
 
-  if(!g_receiver.begin(port)) {
-    M5_LOGI("Failed to begin udp connection. Suspend myself.");
-    wifi_utils::disconnect_wifi();
-    vTaskSuspend(NULL);
+  while(true) {
+    if(!wifi_utils::connect_wifi_via_smart_config(IP, IP, SUBNET)) {
+      M5_LOGE("Failed to connect Wi-Fi. Retry.");
+      continue;
+    }
+
+    if(!g_receiver.begin(port)) {
+      M5_LOGI("Failed to begin udp connection. Retry.");
+      continue;
+    }
+    break;
   }
 
   M5_LOGI("Start robocup core task. IP: %s, PORT: %d, Robot ID: %d", IP.toString().c_str(), port, robot_id);
