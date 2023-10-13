@@ -67,6 +67,12 @@ void robocup_core_task(void * arg) {
   auto port = PORT_BASE + robot_id;
 
   while(true) {
+    auto elapsed_time = menu_select::watch_button_press();
+    if (elapsed_time > menu_select::SHORT_PRESS_MS) {
+      M5_LOGI("Exit.");
+      vTaskSuspend(NULL);
+    }
+
     if(!wifi_utils::connect_wifi_via_smart_config(IP, IP, SUBNET)) {
       M5_LOGE("Failed to connect Wi-Fi. Retry.");
       continue;
