@@ -104,7 +104,7 @@ void setup() {
                        4096, NULL, 2, NULL,
                        CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(hardware_test::hardware_test_task, "hardware_test_task",
-                       4096, NULL, 1, &g_hardware_test_task_handle,
+                       4096, NULL, 3, &g_hardware_test_task_handle,
                        CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(robocup_core::robocup_core_task, "robocup_core_task",
                        4096, NULL, 1, &g_robocup_core_task_handle,
