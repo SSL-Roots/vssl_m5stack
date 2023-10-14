@@ -24,6 +24,12 @@ void set_continuous(void);
 void set_blink_ms(const unsigned int ms);
 void set_number(const unsigned int number);
 
+void set_color_green(void);
+void set_color_blue(void);
+void set_color_red(void);
+void set_color_yellow(void);
+void set_color_purple(void);
+
 }  // namespace led_control
 
 #endif  // LED_CONTROL_HPP

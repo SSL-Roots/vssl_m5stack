@@ -145,6 +145,7 @@ void hardware_test_task(void * arg) {
 
   M5_LOGI("Hardware Test Task Start!");
   while (true) {
+    led_control::set_color_blue();
     auto elapsed_time = menu_select::watch_button_press();
 
     if (elapsed_time > menu_select::LONG_PRESS_MS) {

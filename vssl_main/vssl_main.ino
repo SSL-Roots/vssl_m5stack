@@ -53,6 +53,7 @@ void task_selct_task(void * arg) {
       continue;
     }
 
+    led_control::set_color_purple();
     auto elapsed_time = menu_select::watch_button_press();
 
     if (elapsed_time > menu_select::LONG_PRESS_MS) {

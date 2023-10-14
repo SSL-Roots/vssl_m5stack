@@ -78,6 +78,7 @@ void robocup_core_task(void * arg) {
   auto port = PORT_BASE + robot_id;
 
   while(true) {
+    led_control::set_color_yellow();
     auto elapsed_time = menu_select::watch_button_press();
     if (elapsed_time > menu_select::SHORT_PRESS_MS) {
       M5_LOGI("Exit.");
@@ -100,6 +101,7 @@ void robocup_core_task(void * arg) {
   led_control::set_number(robot_id);
 
   while (true) {
+    led_control::set_color_green();
     robot_info_writer::g_robot_info = make_robot_info();
 
     auto elapsed_time = menu_select::watch_button_press();

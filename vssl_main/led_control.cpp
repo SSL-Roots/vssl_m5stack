@@ -35,12 +35,14 @@ unsigned int g_blink_ms = 500;
 unsigned int g_number = 0;
 
 CRGB g_leds[1];
+CRGB g_color = CRGB::Green;
+
 std::map<m5::board_t, std::function<void(void)>> g_led_on_map= {
   {m5::board_t::board_M5Stack, [](){
     digitalWrite(IO_LED, HIGH);
     }},
   {m5::board_t::board_M5StampS3, [](){
-    g_leds[0] = CRGB::Green;
+    g_leds[0] = g_color;
     FastLED.show();
     }},
 };
@@ -124,4 +126,24 @@ void set_number(const unsigned int number) {
   g_number = number;
 }
 
+void set_color_green(void) {
+  g_color = CRGB::Green;
 }
+
+void set_color_blue(void) {
+  g_color = CRGB::Blue;
+}
+
+void set_color_red(void) {
+  g_color = CRGB::Red;
+}
+
+void set_color_yellow(void) {
+  g_color = CRGB::Yellow;
+}
+
+void set_color_purple(void) {
+  g_color = CRGB::Purple;
+}
+
+}  // namespace  led_control
