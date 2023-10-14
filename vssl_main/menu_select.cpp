@@ -19,7 +19,7 @@
 
 namespace menu_select {
 
-const unsigned int LONG_PRESS_MS = 5000;
+const unsigned int LONG_PRESS_MS = 3000;
 const unsigned int MIDDLE_PRESS_MS = 1000;
 const unsigned int SHORT_PRESS_MS = 10;
 
