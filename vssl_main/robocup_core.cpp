@@ -31,8 +31,17 @@ CommandReceiver g_receiver;
 RobotInformations make_robot_info() {
   RobotInformations robot_info;
 
+  const long TIMEOUT_MS = 1000;
+  static long last_coonect_timestamp = 0;
+
   if(g_receiver.receive()) {
     // M5_LOGD("Received command!");
+    last_coonect_timestamp = millis();
+  } else {
+    if (millis() - last_coonect_timestamp > TIMEOUT_MS) {
+      robot_info.setRobotVelocity(0.0, 0.0, 0.0);
+      return robot_info;
+    }
   }
 
   RobotControl command = g_receiver.get_latest_command();
@@ -47,6 +56,8 @@ RobotInformations make_robot_info() {
     robot_info.setKickFlag(false);
   }
 
+  robot_info.setDribbleStrength(command.dribbler_speed);
+
   return robot_info;
 }
 
@@ -56,7 +67,7 @@ bool restart_receiver(const unsigned int port) {
 }
 
 void robocup_core_task(void * arg) {
-  const IPAddress IP(192,168,11,20);
+  const IPAddress IP(192,168,1,133);
   const IPAddress SUBNET(255,255,255,0);
   constexpr unsigned int PORT_BASE = 10000;
   const unsigned int MAX_ROBOT_ID = 11;
