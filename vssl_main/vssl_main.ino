@@ -14,6 +14,7 @@
 
 #include <M5Unified.h>
 
+#include "battery_check.hpp"
 #include "flash_config.hpp"
 #include "led_control.hpp"
 #include "menu_select.hpp"
@@ -98,6 +99,9 @@ void setup() {
     M5_LOGE("Failed to initialize flash config.");
   }
 
+  xTaskCreateUniversal(battery_check::battery_check_task, "battery_check_task",
+                       4096, NULL, 1, NULL,
+                       CONFIG_ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(led_control::led_control_task, "led_control_task",
                        4096, NULL, 1, NULL,
                        CONFIG_ARDUINO_RUNNING_CORE);
