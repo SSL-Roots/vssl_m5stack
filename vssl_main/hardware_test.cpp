@@ -25,15 +25,6 @@
 
 namespace hardware_test {
 
-enum class TEST_LIST {
-  VX_MIN_MAX = 1,
-  VY_MIN_MAX,
-  OMEGA_MIN_MAX,
-  KICK,
-  DRIBBLE,
-  TEST_NUM
-};
-
 void test_vx_min_max(void) {
   const double ACC = 0.5;
   const unsigned int DELTA_T_MS = 1;
@@ -94,6 +85,19 @@ void test_omega_min_max(void) {
   robot_info_writer::g_robot_info.setRobotVelocity(0.0, 0.0, 0.0);
 }
 
+void test_omega_2pi_10sec(void) {
+  const double TIME_MSEC = 10.0 * 1000;
+  const unsigned int DELTA_T_MS = 1;
+  const double OMEGA = 6.28;
+
+  // 10秒間同じ速度で回転する
+  for (double time = 0.0; time < TIME_MSEC; time += DELTA_T_MS) {
+    robot_info_writer::g_robot_info.setRobotVelocity(0.0, 0.0, OMEGA);
+    delay(DELTA_T_MS);
+  }
+  robot_info_writer::g_robot_info.setRobotVelocity(0.0, 0.0, 0.0);
+}
+
 void test_kick(void) {
   // n回連続でキックする
   const unsigned int WAIT_CHARGING_MS = 5000;
@@ -130,13 +134,21 @@ void test_dribble(void) {
   M5_LOGI("Dribble strength: 0.0");
 }
 
+enum class TEST_LIST {
+  VX_MIN_MAX = 1,
+  VY_MIN_MAX,
+  OMEGA_MIN_MAX,
+  OMEGA_2PI_10SEC,
+  TEST_NUM
+};
+
+
 void hardware_test_task(void * arg) {
   std::map<TEST_LIST, std::function<void(void)>> test_map = {
     {TEST_LIST::VX_MIN_MAX, test_vx_min_max},
     {TEST_LIST::VY_MIN_MAX, test_vy_min_max},
     {TEST_LIST::OMEGA_MIN_MAX, test_omega_min_max},
-    {TEST_LIST::KICK, test_kick},
-    {TEST_LIST::DRIBBLE, test_dribble},
+    {TEST_LIST::OMEGA_2PI_10SEC, test_omega_2pi_10sec},
   };
 
   unsigned int test_index = 1;

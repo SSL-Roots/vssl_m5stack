@@ -65,3 +65,24 @@ pb_common.h  pb_encode.c  vssl_robot_control.pb.h
 
 - M5Stack Core向けにビルドする場合は、BoardをM5Stack-Core-ESP32 (esp32)に設定します
 - M5StampS3向けにビルドする場合は、BoardをSTAMP-S3 (esp32)に設定します
+
+## Usage
+
+### ボタン操作
+
+- 短押し：メニュー切り替え
+- 中押し：メニュー実行
+- 長押し：
+  - モード切り替え状態に移行
+  - モード切り替え
+
+### LED
+
+- 紫：モード切替状態
+  - 1回点滅：モード1（テストモード）
+  - 2回点滅：モード2
+- 青：テストモード
+  - 1回点滅：VXテスト
+  - 2回点滅：VYテスト
+  - 3回点滅：Vomegaテスト
+  - 4回点滅：2pi rad/s で 10秒間回転

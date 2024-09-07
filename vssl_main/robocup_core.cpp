@@ -67,7 +67,7 @@ bool restart_receiver(const unsigned int port) {
 }
 
 void robocup_core_task(void * arg) {
-  const IPAddress IP(192,168,1,133);
+  const IPAddress IP(192,168,11,113);
   const IPAddress SUBNET(255,255,255,0);
   constexpr unsigned int PORT_BASE = 10000;
   const unsigned int MAX_ROBOT_ID = 11;
