@@ -14,6 +14,7 @@
 
 #include <M5Unified.h>
 
+#include "battery_check.hpp"
 #include "command_receiver.h"
 #include "flash_config.hpp"
 #include "led_control.hpp"
@@ -28,11 +29,13 @@ namespace robocup_core {
 
 CommandReceiver g_receiver;
 
-RobotInformations make_robot_info() {
+RobotInformations make_robot_info(bool * is_timeout) {
   RobotInformations robot_info;
 
   const long TIMEOUT_MS = 1000;
   static long last_coonect_timestamp = 0;
+
+  *is_timeout = false;
 
   if(g_receiver.receive()) {
     // M5_LOGD("Received command!");
@@ -40,6 +43,7 @@ RobotInformations make_robot_info() {
   } else {
     if (millis() - last_coonect_timestamp > TIMEOUT_MS) {
       robot_info.setRobotVelocity(0.0, 0.0, 0.0);
+      *is_timeout = true;
       return robot_info;
     }
   }
@@ -71,6 +75,7 @@ void robocup_core_task(void * arg) {
   const IPAddress SUBNET(255,255,255,0);
   constexpr unsigned int PORT_BASE = 10000;
   const unsigned int MAX_ROBOT_ID = 11;
+  constexpr uint32_t BATTERY_LOW_THRESHOLD = 1100 * 2.0;  // 1.1 V * 2
 
   led_control::set_blink_ms(100);
 
@@ -101,8 +106,16 @@ void robocup_core_task(void * arg) {
   led_control::set_number(robot_id);
 
   while (true) {
-    led_control::set_color_green();
-    robot_info_writer::g_robot_info = make_robot_info();
+    bool is_timeout = false;
+    robot_info_writer::g_robot_info = make_robot_info(&is_timeout);
+
+    if (battery_check::milli_volts() < BATTERY_LOW_THRESHOLD) {
+      led_control::set_color_red();
+    } else if (is_timeout) {
+      led_control::set_color_purple();
+    } else {
+      led_control::set_color_green();
+    }
 
     auto elapsed_time = menu_select::watch_button_press();
     if (elapsed_time > menu_select::LONG_PRESS_MS) {
