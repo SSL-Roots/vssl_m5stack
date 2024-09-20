@@ -71,16 +71,17 @@ bool restart_receiver(const unsigned int port) {
 }
 
 void robocup_core_task(void * arg) {
-  const IPAddress IP(192,168,11,113);
-  const IPAddress SUBNET(255,255,255,0);
-  constexpr unsigned int PORT_BASE = 10000;
   const unsigned int MAX_ROBOT_ID = 11;
   constexpr uint32_t BATTERY_LOW_THRESHOLD = 1100 * 2.0;  // 1.1 V * 2
 
-  led_control::set_blink_ms(100);
-
   auto robot_id = flash_config::get_robot_id();
-  auto port = PORT_BASE + robot_id;
+  const auto ip_4_octet = 20 + robot_id;
+
+  const IPAddress IP(192,168,2,ip_4_octet);
+  const IPAddress SUBNET(255,255,255,0);
+  constexpr unsigned int PORT = 10000;
+
+  led_control::set_blink_ms(100);
 
   while(true) {
     led_control::set_color_yellow();
@@ -95,14 +96,14 @@ void robocup_core_task(void * arg) {
       continue;
     }
 
-    if(!g_receiver.begin(port)) {
+    if(!g_receiver.begin(PORT)) {
       M5_LOGI("Failed to begin udp connection. Retry.");
       continue;
     }
     break;
   }
 
-  M5_LOGI("Start robocup core task. IP: %s, PORT: %d, Robot ID: %d", IP.toString().c_str(), port, robot_id);
+  M5_LOGI("Start robocup core task. IP: %s, PORT: %d, Robot ID: %d", IP.toString().c_str(), PORT, robot_id);
   led_control::set_number(robot_id);
 
   while (true) {
@@ -142,7 +143,7 @@ void robocup_core_task(void * arg) {
         robot_id = 0;
       }
 
-      if (!restart_receiver(PORT_BASE + robot_id)) {
+      if (!restart_receiver(PORT)) {
         M5_LOGI("Failed to restart udp connection. Suspend myself.");
         wifi_utils::disconnect_wifi();
         vTaskSuspend(NULL);
